@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    Rent my car - <?= $title ?? ''?>
+    Rent my car - <?= $title ?? '' ?>
   </title>
   <!-- balise open graphe -->
   <!-- css bootstrap file -->
@@ -23,23 +23,23 @@
 <body>
   <header></header>
 
-  <main class="container-fluid">
-    <div class="row d-flex justify-content-center">
-    <!-- sidebar -->
-      <div id="sidebar-wrapper" class="d-none d-xl-block col-xl-3">
-        <ul class="sidebar-nav">
-          <li class="pb-5">
-            <h2 class="pt-3 text-center text-white">Dashboard</h2>
-            <hr class="m-auto">
-          </li>
-          <li>
-            <a href="http://rent-my-car.localhost/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
-          </li>
-          <li>
-            <a href="#"><i class="fa-solid fa-car"></i>Véhicules</a>
-          </li>
-          <li>
-            <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>
-          </li>
-        </ul>
-      </div>
+  <div id="wrapper">
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+      <ul class="sidebar-nav">
+        <li class="pb-3">
+          <h2 class="pt-3 text-center text-white">Dashboard</h2>
+          <hr class="m-auto">
+        </li>
+        <li>
+          <a href="http://rent-my-car.localhost/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa-solid fa-car"></i>Véhicules</a>
+        </li>
+        <li>
+          <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>
+        </li>
+      </ul>
+    </div>
+    <div id="page-content-wrapper">

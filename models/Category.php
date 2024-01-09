@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../config/init.php');
-require_once(__DIR__ .'/../helpers/Database.php');
+require_once(__DIR__ . '/../helpers/Database.php');
 
 class Category
 {
@@ -99,11 +99,11 @@ class Category
      * 
      * @return array
      */
-    public static function getAll() :array
+    public static function getAll(): array
     {
         // appel de la méthode static connect
         $pdo = Database::connect();
-       
+
         $sql = 'SELECT `name`,`id_category` FROM `categories`;';
 
         /*Sélectionner toutes les valeurs dans la table catégorie*/
@@ -111,15 +111,34 @@ class Category
         $sth = $pdo->query($sql);
 
         $result = $sth->fetchAll(PDO::FETCH_OBJ);
-     
+
         return $result;
-      
     }
 
-    public function update($id_category, $name) {
+    public static function get(int $id_category):object|false
+    {
+        // appel de la méthode static connect
+        $pdo = Database::connect();
+
+        $sql = 'SELECT * FROM `categories` WHERE `id_category` =:id_category;';
+
+        $sth = $pdo->prepare($sql);
+        
+        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+        
+        $sth->execute();
+
+        $result = $sth->fetch(PDO::FETCH_OBJ);
+
+        return $result;
+
+    }
+
+    public function update($id_category, $name)
+    {
 
         $pdo = Database::connect();
-        
+
         $sql = 'UPDATE `categories` SET name = :name WHERE id_category =:id_category';
 
         /*Mette à jour toutes les valeurs dans la table catégorie*/
@@ -127,18 +146,10 @@ class Category
         $sth->bindValue(':name', $name);
         $sth->bindValue(':id_category', $id_category);
 
-        $sthResult = $sth->execute();
+        $result = $sth->execute();
 
-        return $sthResult;
+        return $result;
     }
-
 }
-
-
-
-
-
-
-
 
 

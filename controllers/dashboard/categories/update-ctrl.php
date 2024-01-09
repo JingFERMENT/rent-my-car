@@ -11,20 +11,16 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
     $title = 'modifier une catégorie';
 
-    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        // GET Methode: pré-remplir les données 
-        $idCategory = $_GET['id_category'];
-        $categories = Category::getAll();
+    $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
 
-        foreach ($categories as $category) {
-            if ($idCategory == $category->id_category) {
-                $categoryName = $category->name;
-                $categoryId = $category->id_category;
-            }
-        } 
+    $category = Category::get($idCategory);
 
-    } else {
-        // POST Méthode: modifier les données pré-remplies
+    if (!$category) {
+        header('location: /controllers/dashboard/categories/list-ctrl.php');
+        exit;
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
         // nettoyage des données "modifier du nom de catégorie"
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -43,7 +39,7 @@ try {
         if (empty($errors)) {
             $category = new Category();
             $updateCategoryResult = $category->update($_POST['id_category'], $name);
-            
+
             if ($updateCategoryResult) {
                 $msg = 'La donnée a bien été modifiée.';
                 $name = '';
@@ -51,7 +47,6 @@ try {
                 $msg = 'Erreur, la donnée n\'a pas été insérée.';
             }
         }
-
     }
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();
