@@ -1,25 +1,28 @@
-<section class="container">
-
-    <div class="row">
+<section class="col-xl-9">
+    <div class="row ">
         <div class="py-5 ">
             <h1 class="text-center pt-5">Liste des catégories</h1>
             <div class="d-flex justify-content-end">
-                <a href="http://rent-my-car.localhost/controllers/dashboard/categories/add-ctrl.php"><button type="submit" class="btn btn-dark text-white my-4" value="Envoyer">Ajouter une catégorie</button></a>
+                <a href="/controllers/dashboard/categories/add-ctrl.php"><button type="submit" class="btn btn-dark text-white my-4" value="Envoyer">Ajouter une catégorie</button></a>
             </div>
             <!-- LISTE DES CATEGORIES -->
-            <div class="d-flex justify-content-center gap-5">
-                <table>
+            <div class="d-flex justify-content-end gap-5">
+                <table class="table">
                     <tr>
-                        <th>Catégorie ID</th>
-                        <th>Nom de catégorie</th>
+                        <th  scope="col">Id</th>
+                        <th  scope="col">Nom de catégorie</th>
+                        <th  scope="col">Modifier</th>
+                        <th  scope="col">Supprimer</th>
                     </tr>
 
-                    <?php forEach($displayResult as $key => $value) { ?>
-                    <tr>
-                        <td><?=$value['id_category']?></td>
-                        <td><?=$value['name']?></td>
-                    </tr>
-               <?php }?>
+                    <?php foreach ($categories as $category) { ?>
+                        <tr>
+                            <td scope="row"><?= $category->id_category ?></td>
+                            <td><?= $category->name ?></td>
+                            <td><a class="text-dark" href = "/controllers/dashboard/categories/update-ctrl.php"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                            <td><i class="fa-solid fa-trash-can"></i></td>
+                        </tr>
+                    <?php } ?>
                 </table>
             </div>
         </div>

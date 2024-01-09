@@ -5,10 +5,12 @@ require_once(__DIR__ . '/../../../models/Category.php');
 
 try {
     $title = 'liste des catégories';
-    $category = new Category();
-    $displayResult = $category->getAll();
+    $categories = Category::getAll();
+    
+
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    // echo "Connection failed: " . $e->getMessage();
+    var_dump($e);
 }
 
 // views

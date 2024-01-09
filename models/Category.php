@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../config/init.php');
+require_once(__DIR__ .'/../helpers/Database.php');
 
 class Category
 {
@@ -69,6 +70,7 @@ class Category
         return $this->id_category;
     }
 
+    // création des méthodes persos
     /**
      * Méthode permettant d'effectuer l'ajout d'une catégorie en base de données
      * 
@@ -76,7 +78,7 @@ class Category
      */
     public function insert()
     {
-        $pdo = new PDO(DSN, USER, PASSWORD);
+        $pdo = Database::connect();
 
         $sql = 'INSERT INTO `categories`(`name`) VALUES (:name);';
 
@@ -91,24 +93,42 @@ class Category
         return $sthResult;
     }
 
-    // création de la méthode permettant de retourner toutes les donnes de la base
-    public function getAll()
+    /**
+     * 
+     * Méthode permettant de retourner toutes les données de la base
+     * 
+     * @return array
+     */
+    public static function getAll() :array
     {
-        $pdo = new PDO(DSN, USER, PASSWORD);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // appel de la méthode static connect
+        $pdo = Database::connect();
+       
+        $sql = 'SELECT `name`,`id_category` FROM `categories`;';
 
-        /*Sélectionne toutes les valeurs dans la table catégorie*/
-        $sth = $pdo->prepare("SELECT * FROM `categories`;");
-        $sth->execute();
-        $result = $sth->fetchAll(PDO::FETCH_ASSOC);
+        /*Sélectionner toutes les valeurs dans la table catégorie*/
+        // query : préparer et executer sans marqueur substitute
+        $sth = $pdo->query($sql);
+
+        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+     
         return $result;
       
     }
 }
 
-// $category = new Category();
-// $displayResult = $category->getAll();
-// var_dump($displayResult[0]['id_category']);
+   // public function update() {
+    //      $pdo = Database::connect();
+    //     $sql = 'UPDATE `categories` SET name = ?  WHERE id = ?';
+
+    //     /*Mette à jour toutes les valeurs dans la table catégorie*/
+    //     $sth = $pdo->prepare($sql);
+    //     $result = $sth->execute();
+    //     return $result;
+    // }
+
+
+
 
 
 

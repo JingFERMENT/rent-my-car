@@ -1,8 +1,9 @@
-    </main>
+    </div>
+</main>
 
-    <footer >
+<footer>
 
-    </footer>
+</footer>
 
 </body>
 

@@ -23,22 +23,23 @@
 <body>
   <header></header>
 
-  <main>
+  <main class="container-fluid">
+    <div class="row d-flex justify-content-center">
     <!-- sidebar -->
-    <div id="sidebar-wrapper">
-      <ul class="sidebar-nav">
-        <li class="pb-5">
-          <h2 class="pt-3 text-center text-white">Dashboard</h2>
-          <hr class="m-auto">
-        </li>
-        <li>
-          <a href="http://rent-my-car.localhost/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
-        </li>
-        <li>
-          <a href="#"><i class="fa-solid fa-car"></i>Véicules</a>
-        </li>
-        <li>
-          <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>
-        </li>
-      </ul>
-    </div>
+      <div id="sidebar-wrapper" class="d-none d-xl-block col-xl-3">
+        <ul class="sidebar-nav">
+          <li class="pb-5">
+            <h2 class="pt-3 text-center text-white">Dashboard</h2>
+            <hr class="m-auto">
+          </li>
+          <li>
+            <a href="http://rent-my-car.localhost/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-car"></i>Véhicules</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>
+          </li>
+        </ul>
+      </div>
