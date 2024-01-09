@@ -3,6 +3,7 @@
 require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 
+
 // connexion de la base des données  
 // $dsn : data server name 
 // host: hébergeur 
@@ -29,13 +30,12 @@ try {
         }
 
         // si tout est OK 
-        if (empty($error)) {
+        if (empty($errors)) {
             // objet prêt à être inséré dans la base 
             $category = new Category();
             // objet hydraté
             $category->setName($name);
-
-            $insertResult = $category->insert();
+            $insertResult = $category->insert();;
 
             if ($insertResult) {
                 $msg = 'La donnée a bien été insérée.';

@@ -6,7 +6,6 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
     $title = 'liste des catégories';
     $categories = Category::getAll();
-    
 
 } catch (Throwable $e) {
     // echo "Connection failed: " . $e->getMessage();

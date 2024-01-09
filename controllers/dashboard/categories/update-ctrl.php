@@ -9,13 +9,24 @@ require_once(__DIR__ . '/../../../models/Category.php');
 
 // mettre de manière globale
 try {
-    $title = 'ajouter une catégorie';
+    $title = 'modifier une catégorie';
 
-    // si le formulaire est envoyé
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        // GET Methode: pré-remplir les données 
+        $idCategory = $_GET['id_category'];
+        $categories = Category::getAll();
 
+        foreach ($categories as $category) {
+            if ($idCategory == $category->id_category) {
+                $categoryName = $category->name;
+                $categoryId = $category->id_category;
+            }
+        } 
+
+    } else {
+        // POST Méthode: modifier les données pré-remplies
         $errors = [];
-        // nettoyage des données "ajout du nom de catégorie"
+        // nettoyage des données "modifier du nom de catégorie"
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if (empty($name)) { // le champs est obligatoire
@@ -29,21 +40,18 @@ try {
         }
 
         // si tout est OK 
-        if (empty($error)) {
-            // objet prêt à être inséré dans la base 
+        if (empty($errors)) {
             $category = new Category();
-            // objet hydraté
-            $category->setName($name);
-
-            $insertResult = $category->insert();
-
-            if ($insertResult) {
-                $msg = 'La donnée a bien été insérée.';
+            $updateCategoryResult = $category->update($_POST['id_category'], $name);
+            
+            if ($updateCategoryResult) {
+                $msg = 'La donnée a bien été modifiée.';
                 $name = '';
             } else {
                 $msg = 'Erreur, la donnée n\'a pas été insérée.';
             }
         }
+
     }
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -54,21 +62,3 @@ try {
 include __DIR__ . '/../../../views/templates/header_dashboard.php';
 include __DIR__ . '/../../../views/dashboard/categories/update.php';
 include __DIR__ . '/../../../views/templates/footer_dashboard.php';
-
-// operations 
-// vider la table (truncate)
-// décocher la case
-// } else {
-//     // selectionner les données entrées 
-//     $sql = "SELECT name FROM categories WHERE name = ?";
-//     $stmt = $pdo->prepare($sql);
-//     $stmt->execute([$name]);
-//     $sqlResult = $stmt->fetch();
-//     // vérifier des doublons 
-//     if (is_array($sqlResult) && count($sqlResult) > 0) {
-//         $erros['name'] = 'Cette catégorie existe déjà.';
-//     } else {
-//         $result = 'Le nom de catégorie a bien été pris en compte.';
-//         // on utilise les marqueurs nominatif après : 
-//     }
-// }

@@ -115,17 +115,27 @@ class Category
         return $result;
       
     }
+
+    public function update($id_category, $name) {
+
+        $pdo = Database::connect();
+        
+        $sql = 'UPDATE `categories` SET name = :name WHERE id_category =:id_category';
+
+        /*Mette à jour toutes les valeurs dans la table catégorie*/
+        $sth = $pdo->prepare($sql);
+        $sth->bindValue(':name', $name);
+        $sth->bindValue(':id_category', $id_category);
+
+        $sthResult = $sth->execute();
+
+        return $sthResult;
+    }
+
 }
 
-   // public function update() {
-    //      $pdo = Database::connect();
-    //     $sql = 'UPDATE `categories` SET name = ?  WHERE id = ?';
 
-    //     /*Mette à jour toutes les valeurs dans la table catégorie*/
-    //     $sth = $pdo->prepare($sql);
-    //     $result = $sth->execute();
-    //     return $result;
-    // }
+
 
 
 
