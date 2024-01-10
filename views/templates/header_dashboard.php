@@ -28,11 +28,13 @@
     <div id="sidebar-wrapper">
       <ul class="sidebar-nav">
         <li class="pb-3">
-          <h2 class="pt-3 text-center text-white">Dashboard</h2>
+          <a href="/index.php">
+            <h2 class="pt-3 text-center text-white">Dashboard</h2>
+          </a>
           <hr class="m-auto">
         </li>
         <li>
-          <a href="http://rent-my-car.localhost/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
+          <a href="/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
         </li>
         <li>
           <a href="#"><i class="fa-solid fa-car"></i>Véhicules</a>
@@ -43,3 +45,7 @@
       </ul>
     </div>
     <div id="page-content-wrapper">
+
+
+      <a href="/index.php" class="d-md-none btn btn-warning text-white my-4" value="Retour">
+        << Retour</a>

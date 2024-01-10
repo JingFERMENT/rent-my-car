@@ -39,6 +39,7 @@ class Category
     }
 
     /**
+     * 
      * Méthode permettant de retourner la valeur de l'attribut name
      * 
      * @return string
@@ -72,6 +73,7 @@ class Category
 
     // création des méthodes persos
     /**
+     * 
      * Méthode permettant d'effectuer l'ajout d'une catégorie en base de données
      * 
      * @return bool
@@ -115,7 +117,15 @@ class Category
         return $result;
     }
 
-    public static function get(int $id_category):object|false
+    /**
+     * 
+     * Méthode permettant de retourner les valeurs concernées d'une id_category
+     * 
+     * @param int $id_category
+     * 
+     * @return Category
+     */
+    public static function get(int $id_category): Category|false
     {
         // appel de la méthode static connect
         $pdo = Database::connect();
@@ -123,9 +133,87 @@ class Category
         $sql = 'SELECT * FROM `categories` WHERE `id_category` =:id_category;';
 
         $sth = $pdo->prepare($sql);
-        
+
         $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+
+        $sth->execute();
+
+        $result = $sth->fetch(PDO::FETCH_OBJ);
+
+        $category = new Category($result->name, $result->id_category);
+
+        return $category;
+    }
+
+    /**
+     * 
+     * Méthode permettant de mettre à jour les valeurs dans la table catégorie
+     *  
+     * @param mixed $id_category
+     * @param mixed $name
+     * 
+     * @return [type]
+     */
+    public function update(): bool
+    {
+
+        $pdo = Database::connect();
+
+        $sql = 'UPDATE `categories` SET name = :name WHERE id_category =:id_category;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':name', $this->getName());
+        $sth->bindValue(':id_category', $this->getIdCategory(), PDO::PARAM_INT);
+
+        $result = $sth->execute();
+
+        return $result;
+    }
+
+    /**
+     * 
+     *  Méthode permettant de supprimer une valeur 
+     * 
+     * @param mixed $id_category
+     * 
+     * @return bool
+     */
+    public function delete($id_category): bool
+    {
+
+        $pdo = Database::connect();
+
+        $sql = 'DELETE FROM `categories` WHERE id_category =:id_category';
+
+        $sth = $pdo->prepare($sql);
         
+        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT );
+
+        $result = $sth->execute();
+
+        return $result;
+    }
+
+    
+    /**
+     * 
+     * Méthode permettant de vérifier s'il y a un doublon dans les noms de catégories 
+     * 
+     * @param mixed $name
+     * 
+     * @return bool
+     */
+    public function isExist($name):bool
+    {
+        $pdo = Database::connect();
+
+        $sql = 'SELECT * FROM `categories` WHERE name =:name';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':name', $name);
+
         $sth->execute();
 
         $result = $sth->fetch(PDO::FETCH_OBJ);
@@ -133,23 +221,8 @@ class Category
         return $result;
 
     }
-
-    public function update($id_category, $name)
-    {
-
-        $pdo = Database::connect();
-
-        $sql = 'UPDATE `categories` SET name = :name WHERE id_category =:id_category';
-
-        /*Mette à jour toutes les valeurs dans la table catégorie*/
-        $sth = $pdo->prepare($sql);
-        $sth->bindValue(':name', $name);
-        $sth->bindValue(':id_category', $id_category);
-
-        $result = $sth->execute();
-
-        return $result;
-    }
 }
 
+// $new = new Category();
 
+// var_dump($new->isExist('Voiture'));

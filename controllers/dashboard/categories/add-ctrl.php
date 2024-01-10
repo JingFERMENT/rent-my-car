@@ -35,13 +35,21 @@ try {
             $category = new Category();
             // objet hydraté
             $category->setName($name);
-            $insertResult = $category->insert();;
 
-            if ($insertResult) {
-                $msg = 'La donnée a bien été insérée.';
-                $name = '';
+            $isExistDuplicate = $category->isExist($name);
+
+            if ($isExistDuplicate) {
+
+                $errors['name'] = 'Cette catégorie existe déjà.';
+
             } else {
-                $msg = 'Erreur, la donnée n\'a pas été insérée.';
+                $insertResult = $category->insert();
+                if ($insertResult) {
+                    $msg = 'La catégorie a bien été prise en compte.';
+                    // header('location: /controllers/dashboard/categories/list-ctrl.php');
+                } else {
+                    $msg = 'Erreur, la donnée n\'a pas été insérée.';
+                }
             }
         }
     }
@@ -55,20 +63,15 @@ include __DIR__ . '/../../../views/templates/header_dashboard.php';
 include __DIR__ . '/../../../views/dashboard/categories/add.php';
 include __DIR__ . '/../../../views/templates/footer_dashboard.php';
 
-// operations 
-// vider la table (truncate)
-// décocher la case
-// } else {
-//     // selectionner les données entrées 
-//     $sql = "SELECT name FROM categories WHERE name = ?";
-//     $stmt = $pdo->prepare($sql);
-//     $stmt->execute([$name]);
-//     $sqlResult = $stmt->fetch();
+// how to vider la table manuelle dans le SQL 
+// aller sur le rubrique "operations" -> vider la table (truncate) -> décocher la case
+
+// } else {  
 //     // vérifier des doublons 
 //     if (is_array($sqlResult) && count($sqlResult) > 0) {
 //         $erros['name'] = 'Cette catégorie existe déjà.';
 //     } else {
 //         $result = 'Le nom de catégorie a bien été pris en compte.';
-//         // on utilise les marqueurs nominatif après : 
+//          
 //     }
 // }

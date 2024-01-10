@@ -1,23 +1,21 @@
-<?php
 
+<?php
+// !!!! meme vu pour ajouter et modifier 
 require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
-
-// connexion de la base des données  
-// $dsn : data server name 
-// host: hébergeur 
 
 // mettre de manière globale
 try {
     $title = 'modifier une catégorie';
-
+    
+    // attention c'est en GET pour récupérer les données 
     $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
-
     $category = Category::get($idCategory);
+
 
     if (!$category) {
         header('location: /controllers/dashboard/categories/list-ctrl.php');
-        exit;
+        die;
     }
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -38,20 +36,29 @@ try {
         // si tout est OK 
         if (empty($errors)) {
             $category = new Category();
-            $updateCategoryResult = $category->update($_POST['id_category'], $name);
 
-            if ($updateCategoryResult) {
-                $msg = 'La donnée a bien été modifiée.';
-                $name = '';
+            $category->setName($name);
+            $category->setIdCategory($idCategory);
+
+            $isExistDuplicate = $category->isExist($name);
+
+            if ($isExistDuplicate) {
+                $errors['name'] = 'Cette catégorie existe déjà.';
             } else {
-                $msg = 'Erreur, la donnée n\'a pas été insérée.';
+                $updateCategoryResult = $category->update();
+                if ($updateCategoryResult) {
+                    $msg = 'La donnée a bien été modifiée.';
+                    // header('location: /controllers/dashboard/categories/list-ctrl.php');
+                } else {
+                    $msg = 'Erreur, la donnée n\'a pas été modifiée.';
+                }
             }
+
         }
     }
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
 
 // views 
 include __DIR__ . '/../../../views/templates/header_dashboard.php';

@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rent my car</title>
-</head>
-<body>
-    
-</body>
-</html>
+<?php
+    header('location: /controllers/dashboard/categories/list-ctrl.php');
+    die;
