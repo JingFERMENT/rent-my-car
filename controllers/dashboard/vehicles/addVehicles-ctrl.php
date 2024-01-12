@@ -1,38 +1,24 @@
 <?php
-session_start();
-require_once(__DIR__ . '/../../../config/init.php');
-require_once(__DIR__ . '/../../../models/Vehicles.php');
+require_once(__DIR__ . '/../../../models/Vehicle.php');
 require_once(__DIR__ . '/../../../models/Category.php');
-
-// extraite des noms de catégories 
-function extractCategoryNames($categories)
-{
-    $names = [];
-
-    foreach ($categories as $category) {
-        $names[] = $category->name;
-    }
-
-    return $names;
-}
 
 try {
     $title = 'ajouter un véhicule';
     $categories = Category::getAll();
-    $categoryNames = extractCategoryNames($categories);
+    $ID = array_column($categories,'id_category');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
 
         // Catégorie
-        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+        $id_category = intval(filter_input(INPUT_POST, 'id_category', FILTER_SANITIZE_NUMBER_INT));
 
-        if (empty($name)) { // pour les champs obligatoires
-            $errors['name'] = 'La catégorie est obligatoire.';
+        if (empty($id_category)) { // pour les champs obligatoires
+            $errors['id_category'] = 'La catégorie est obligatoire.';
         } else { // validation des données
-            $isOk = in_array($name, $categoryNames);
+            $isOk = in_array($id_category, $ID);      
             if (!$isOk) {
-                $errors['name'] = 'Votre choix est invalide.';
+                $errors['id_category'] = 'Votre choix est invalide.';
             }
         }
 
@@ -86,32 +72,31 @@ try {
             }
         }
 
-        // // FILE: 
-        if (!empty($_FILES)) {
-            if ($_FILES['photo']['error'] !== 4) {
-                try {
-                    if (!empty($_FILES['photo']['error'])) {
-                        throw new Exception("Une erreur s'est produite.");
-                    }
-
-                    if (!in_array($_FILES['photo']['type'], ARRAY_TYPES_MIMES)) {
-                        throw new Exception("Le format de l'image n'est pas correct.");
-                    }
-
-                    if ($_FILES['photo']['size'] > UPLOAD_MAX_SIZE) {
-                        throw new Exception("Le fichier est trop lourd");
-                    }
-
-                    $filename = uniqid('img_');
-                    $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-                    $from = $_FILES['photo']['tmp_name'];
-                    $toBack = __DIR__ . '/../public/uploads/users/' . $filename . '.' . $extension;
-                    $toFront = '/public/uploads/users/' . $filename . '.' . $extension;
-                    move_uploaded_file($from, $toBack);
-                } catch (\Throwable $th) {
-                    $error['photo'] = $th->getMessage();
-                }
+        // FILE: 
+        try {
+            // quand il y a une erreur 
+            if (!empty($_FILES['photo']['error'])) {
+                throw new Exception("Une erreur s'est produite.");
             }
+
+            // quand le format n'est pas correct
+            if (!in_array($_FILES['photo']['type'], ARRAY_TYPES_MIMES)) {
+                throw new Exception("Le format de l'image n'est pas correct.");
+            }
+
+            if ($_FILES['photo']['size'] > UPLOAD_MAX_SIZE) {
+                throw new Exception("Le fichier est trop lourd");
+            }
+
+            $filename = uniqid('img_');
+            $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+            $from = $_FILES['photo']['tmp_name'];
+            $toBack = __DIR__ . '/../public/uploads/users/' . $filename . '.' . $extension;
+            $toFront = '/public/uploads/users/' . $filename . '.' . $extension;
+            move_uploaded_file($from, $toBack);
+
+        } catch (\Throwable $th) {
+            $error['photo'] = $th->getMessage();
         }
     }
 } catch (Throwable $e) {

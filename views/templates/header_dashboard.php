@@ -40,6 +40,9 @@
           <a href="/controllers/dashboard/vehicles/addVehicles-ctrl.php"><i class="fa-solid fa-car"></i>Véhicules</a>
         </li>
         <li>
+          <a href="#"><i class="fa-solid fa-user"></i>Clients</a>
+        </li>
+        <li>
           <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>
         </li>
       </ul>

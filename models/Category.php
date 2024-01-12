@@ -10,6 +10,7 @@ class Category
     // Créer autant des attributs que dans les colonnes de l'entité de MCD
     private ?int $id_category;
     private string $name;
+    
 
     /**
      * Méthode magique appelée automatiquement lors de l'instanciation de la classe 'Category'
@@ -125,7 +126,7 @@ class Category
      * 
      * @return Category
      */
-    public static function get(int $id_category): Category|false
+    public static function get(?int $id_category): Category|false
     {
         // appel de la méthode static connect
         $pdo = Database::connect();
@@ -216,7 +217,7 @@ class Category
         // SHOW COLLATION WHERE COLLATION LIKE  "%_cs"
         // COUNT(*): combien il y a d'enregistrement dans la base
         // laisser COUNT(*) peut avoir des problèmes quand on y accède (ex:objet->COUNT(*))
-        // $sql = 'SELECT COUNT(*) AS `nbcolumn` `categories` WHERE `name` =:name';
+        $sql = 'SELECT COUNT(*) AS `nbcolumn` FROM `categories` WHERE `name` =:name;';
         
         $sth = $pdo->prepare($sql);
 
@@ -228,13 +229,17 @@ class Category
         // retourner un objet anonyme / un seul 
         // fetchColumn: chercher directement la valeur de cette colonne 
         // rowCount: update / delete / create however NOT FOR SELECT
-        $result = $sth->fetch(PDO::FETCH_OBJ);
+        // $result = $sth->fetch(PDO::FETCH_OBJ);
 
-        if ($result !== false) {
-            return true;
-        } else {
-            return false;
-        }
-        return $result;
+
+        $result = $sth->fetchColumn();
+        // if ($result !== false) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+
+        // return $result;
+        return $result > 0;
     }
 }
