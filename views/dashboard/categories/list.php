@@ -19,7 +19,7 @@
                     <td scope="row"><?= $category->id_category ?></td>
                     <td><?= $category->name ?></td>
                     <td><a class="text-dark" href="/controllers/dashboard/categories/update-ctrl.php?id_category=<?= $category->id_category ?>"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                    <td><a id= "deleteBtn" onclick="showConfirmationPopup(<?= $category->id_category ?>)" class="text-dark"><i class="fa-solid fa-trash-can"></i></a></td>
+                    <td><a data-category="<?=$category->id_category?>" class="text-dark deleteBtn"><i class="fa-solid fa-trash-can"></i></a></td>
                 </tr>
             <?php } ?>
         </table>

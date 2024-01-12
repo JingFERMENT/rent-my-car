@@ -37,7 +37,7 @@
           <a href="/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
         </li>
         <li>
-          <a href="#"><i class="fa-solid fa-car"></i>Véhicules</a>
+          <a href="/controllers/dashboard/vehicles/addVehicles-ctrl.php"><i class="fa-solid fa-car"></i>Véhicules</a>
         </li>
         <li>
           <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>

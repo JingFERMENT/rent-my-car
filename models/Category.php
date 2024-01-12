@@ -159,7 +159,7 @@ class Category
 
         $pdo = Database::connect();
 
-        $sql = 'UPDATE `categories` SET name = :name WHERE id_category =:id_category;';
+        $sql = 'UPDATE `categories` SET name = :name WHERE `id_category` =:id_category;';
 
         $sth = $pdo->prepare($sql);
 
@@ -179,15 +179,20 @@ class Category
      * 
      * @return bool
      */
-    public function delete($id_category): bool
+    public static function delete(int $id_category): bool
     {
 
+        // méthode "connect" static de la classe Database 
         $pdo = Database::connect();
 
+        // marqueur nominatif 
         $sql = 'DELETE FROM `categories` WHERE id_category =:id_category';
 
+         // solution 1: marqueur nominatif prepare + bindValue + execute / solution 2: sans marquereur utiliser query
         $sth = $pdo->prepare($sql);
         
+        // entier pour id_category
+        // PDO::PARAM_INT: ne mets pas les "" entre les valeurs 
         $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT );
 
         $result = $sth->execute();
@@ -197,7 +202,6 @@ class Category
 
     
     /**
-     * 
      * Méthode permettant de vérifier s'il y a un doublon dans les noms de catégories 
      * 
      * @param mixed $name
@@ -218,11 +222,11 @@ class Category
 
         $result = $sth->fetch(PDO::FETCH_OBJ);
 
+        if ($result !== false) {
+            return true;
+        } else {
+            return false;
+        }
         return $result;
-
     }
 }
-
-// $new = new Category();
-
-// var_dump($new->isExist('Voiture'));

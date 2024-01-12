@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 
@@ -11,6 +11,10 @@ require_once(__DIR__ . '/../../../models/Category.php');
 // mettre de manière globale
 try {
     $title = 'ajouter une catégorie';
+
+   
+
+ 
 
     // si le formulaire est envoyé
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -37,6 +41,7 @@ try {
             $category->setName($name);
 
             $isExistDuplicate = $category->isExist($name);
+            var_dump($isExistDuplicate);
 
             if ($isExistDuplicate) {
 
@@ -65,13 +70,3 @@ include __DIR__ . '/../../../views/templates/footer_dashboard.php';
 
 // how to vider la table manuelle dans le SQL 
 // aller sur le rubrique "operations" -> vider la table (truncate) -> décocher la case
-
-// } else {  
-//     // vérifier des doublons 
-//     if (is_array($sqlResult) && count($sqlResult) > 0) {
-//         $erros['name'] = 'Cette catégorie existe déjà.';
-//     } else {
-//         $result = 'Le nom de catégorie a bien été pris en compte.';
-//          
-//     }
-// }
