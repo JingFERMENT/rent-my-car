@@ -208,18 +208,26 @@ class Category
      * 
      * @return bool
      */
-    public function isExist($name):bool
+    public static function isExist(string $name):bool
     {
         $pdo = Database::connect();
 
-        $sql = 'SELECT * FROM `categories` WHERE name =:name';
-
+        $sql = 'SELECT * FROM `categories` WHERE `name` =:name;';
+        // SHOW COLLATION WHERE COLLATION LIKE  "%_cs"
+        // COUNT(*): combien il y a d'enregistrement dans la base
+        // laisser COUNT(*) peut avoir des problèmes quand on y accède (ex:objet->COUNT(*))
+        // $sql = 'SELECT COUNT(*) AS `nbcolumn` `categories` WHERE `name` =:name';
+        
         $sth = $pdo->prepare($sql);
 
         $sth->bindValue(':name', $name);
 
         $sth->execute();
 
+        // premier résultat recherché 
+        // retourner un objet anonyme / un seul 
+        // fetchColumn: chercher directement la valeur de cette colonne 
+        // rowCount: update / delete / create however NOT FOR SELECT
         $result = $sth->fetch(PDO::FETCH_OBJ);
 
         if ($result !== false) {

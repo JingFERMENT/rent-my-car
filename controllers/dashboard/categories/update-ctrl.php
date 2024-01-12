@@ -7,7 +7,7 @@ require_once(__DIR__ . '/../../../models/Category.php');
 // mettre de manière globale
 try {
     $title = 'modifier une catégorie';
-    
+
     // attention c'est en GET pour récupérer les données 
     $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
     $category = Category::get($idCategory);
@@ -32,6 +32,12 @@ try {
             }
         }
 
+        // vérifier s'il y a des doublons de catégorie
+        $isExistDuplicate = Category::isExist($name);
+        if ($isExistDuplicate && $name != $category->getName()) {
+            $errors['name'] = 'Cette catégorie existe déjà.';
+        }
+
         // si tout est OK 
         if (empty($errors)) {
             $category = new Category();
@@ -39,20 +45,13 @@ try {
             $category->setName($name);
             $category->setIdCategory($idCategory);
 
-            $isExistDuplicate = $category->isExist($name);
-
-            if ($isExistDuplicate) {
-                $errors['name'] = 'Cette catégorie existe déjà.';
+            $updateCategoryResult = $category->update();
+            if ($updateCategoryResult) {
+                $msg = 'La donnée a bien été modifiée.';
+                // header('location: /controllers/dashboard/categories/list-ctrl.php');
             } else {
-                $updateCategoryResult = $category->update();
-                if ($updateCategoryResult) {
-                    $msg = 'La donnée a bien été modifiée.';
-                    // header('location: /controllers/dashboard/categories/list-ctrl.php');
-                } else {
-                    $msg = 'Erreur, la donnée n\'a pas été modifiée.';
-                }
+                $msg = 'Erreur, la donnée n\'a pas été modifiée.';
             }
-
         }
     }
 } catch (Throwable $e) {

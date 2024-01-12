@@ -12,9 +12,7 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
     $title = 'ajouter une catégorie';
 
-   
 
- 
 
     // si le formulaire est envoyé
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -33,6 +31,14 @@ try {
             }
         }
 
+        // vérifier s'il y a des doublons de catégorie
+        $isExistDuplicate = Category::isExist($name);
+        if ($isExistDuplicate) {
+            $errors['name'] = 'Cette catégorie existe déjà.';
+        }
+
+        // colate SQL: majuscule sensibilité
+
         // si tout est OK 
         if (empty($errors)) {
             // objet prêt à être inséré dans la base 
@@ -40,21 +46,12 @@ try {
             // objet hydraté
             $category->setName($name);
 
-            $isExistDuplicate = $category->isExist($name);
-            var_dump($isExistDuplicate);
-
-            if ($isExistDuplicate) {
-
-                $errors['name'] = 'Cette catégorie existe déjà.';
-
+            $insertResult = $category->insert();
+            if ($insertResult) {
+                $msg = 'La catégorie a bien été prise en compte.';
+                // header('location: /controllers/dashboard/categories/list-ctrl.php');
             } else {
-                $insertResult = $category->insert();
-                if ($insertResult) {
-                    $msg = 'La catégorie a bien été prise en compte.';
-                    // header('location: /controllers/dashboard/categories/list-ctrl.php');
-                } else {
-                    $msg = 'Erreur, la donnée n\'a pas été insérée.';
-                }
+                $msg = 'Erreur, la donnée n\'a pas été insérée.';
             }
         }
     }

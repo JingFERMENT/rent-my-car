@@ -6,22 +6,25 @@
     </div>
     <!-- LISTE DES CATEGORIES -->
     <div class="d-flex justify-content-end gap-5">
-        <table class="table">
-            <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Nom de catégorie</th>
-                <th scope="col">Modifier</th>
-                <th scope="col">Supprimer</th>
-            </tr>
-
-            <?php foreach ($categories as $category) { ?>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td scope="row"><?= $category->id_category ?></td>
-                    <td><?= $category->name ?></td>
-                    <td><a class="text-dark" href="/controllers/dashboard/categories/update-ctrl.php?id_category=<?= $category->id_category ?>"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                    <td><a data-category="<?=$category->id_category?>" class="text-dark deleteBtn"><i class="fa-solid fa-trash-can"></i></a></td>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nom de catégorie</th>
+                    <th scope="col">Modifier</th>
+                    <th scope="col">Supprimer</th>
                 </tr>
-            <?php } ?>
+            </thead>
+            <tbody>
+                <?php foreach ($categories as $category) { ?>
+                    <tr>
+                        <th scope="row" class="fst-italic"><?= $category->id_category ?></th>
+                        <td><?= $category->name ?></td>
+                        <td><a class="text-dark" href="/controllers/dashboard/categories/update-ctrl.php?id_category=<?= $category->id_category ?>"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                        <td><a data-category="<?= $category->id_category ?>" class="text-dark deleteBtn"><i class="fa-solid fa-trash-can"></i></a></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
         </table>
     </div>
 </div>
