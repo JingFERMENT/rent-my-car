@@ -7,9 +7,9 @@
             <div class="col-12 mb-3 p-2">
                 <label for="id_category" class="form-label fw-bold">Catégorie</label>
                 <select name="id_category" class="form-select" aria-label="Default select example">
-                    <option disabled>Sélectionnez votre catégorie</option>
+                    <option selected disabled>--Sélectionnez votre catégorie--</option>
                     <?php foreach ($categories as $category) {
-                         $isSelected = ($id_category == $category->id_category) ? 'selected' : ''; 
+                         $isSelected = (isset($id_category) && $id_category == $category->id_category) ? 'selected' : ''; 
                          echo "<option value=\"$category->id_category\" $isSelected>$category->name</option>";
                      } ?>
                 </select>
@@ -24,19 +24,19 @@
             <!-- modèle -->
             <div class="col-12 col-lg-6 mb-3 p-2">
                 <label for="model" class="form-label fw-bold">Modèle</label>
-                <input type="text" name="model" value="" class="form-control" id="brand" aria-describedby="modelHelp" placeholder="C3" minlength="2" maxlength="50" pattern="<?=REGEX_MODEL?>" required>
+                <input type="text" name="model" value="<?=$model ?? ''?>" class="form-control" id="brand" aria-describedby="modelHelp" placeholder="C3" minlength="2" maxlength="50" pattern="<?=REGEX_MODEL?>" required>
                 <span class="text-danger"><?= $errors['model'] ?? '' ?></span>
             </div>
             <!-- registration -->
             <div class="col-12 col-lg-6 mb-3 p-2">
                 <label for="registration" class="form-label fw-bold">Numéro d'immatriculation</label>
-                <input type="text" name="registration" value="" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="exemple : AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_NAME_CATEGORY ?>" required>
+                <input type="text" name="registration" value="<?=$registration ?? ''?>" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="exemple : AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_NAME_CATEGORY ?>" required>
                 <span class="text-danger"><?= $errors['registration'] ?? '' ?></span>
             </div>
             <!-- mileage-->
             <div class="col-12 col-lg-6 mb-3 p-2">
                 <label for="mileage" class="form-label fw-bold">Kilométrage</label>
-                <input type="text" name="mileage" value="" class="form-control" id="mileage" placeholder="1234 kilomètres" minlength="2" maxlength="50" pattern="<?= REGEX_MILEAGE ?>">
+                <input type="text" name="mileage" value="<?=$mileage ?? ''?>" class="form-control" id="mileage" placeholder="1234" minlength="2" maxlength="50" pattern="<?= REGEX_MILEAGE ?>">
                 <span class="text-danger"><?= $errors['mileage'] ?? '' ?></span>
             </div>
             <!-- photo-->
@@ -44,6 +44,7 @@
                 <label for="photo" class="form-label fw-bold">Photo de véhicule</label>
                 <input type="file" name="photo" value="<??>" class="form-control" id="photo" accept=".png, image/jpeg">
                 <span class="text-danger"><?= $errors['photo'] ?? '' ?></span>
+                <img class="img-fluid m-auto mt-3" src="<?= $toFront ?? '' ?>">
             </div>
             <!-- bouton -->
             <div class="col-12 mb-3 p-2 text-center">

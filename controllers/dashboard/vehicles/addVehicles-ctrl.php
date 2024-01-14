@@ -91,12 +91,12 @@ try {
             $filename = uniqid('img_');
             $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
             $from = $_FILES['photo']['tmp_name'];
-            $toBack = __DIR__ . '/../public/uploads/users/' . $filename . '.' . $extension;
-            $toFront = '/public/uploads/users/' . $filename . '.' . $extension;
+            $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
+            $toFront = '/public/uploads/vehicles/' . $filename . '.' . $extension;
             move_uploaded_file($from, $toBack);
 
         } catch (\Throwable $th) {
-            $error['photo'] = $th->getMessage();
+            $errors['photo'] = $th->getMessage();
         }
     }
 } catch (Throwable $e) {

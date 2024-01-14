@@ -258,4 +258,16 @@ class Vehicle
         return $this->category;
     }
 
+    public function insertVehicle() {
+        
+    }
+
+
+
+
+
+
+
+
+
 }
