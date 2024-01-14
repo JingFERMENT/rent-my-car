@@ -21,7 +21,7 @@ try {
     //  on stock les messages dans la session
     $_SESSION['msg'] = $msg;
 
-    header('location:/controllers/dashboard/categories/list-ctrl.php');
+   header('location:/controllers/dashboard/categories/list-ctrl.php');
 
     die;
 

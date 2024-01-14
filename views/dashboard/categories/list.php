@@ -18,13 +18,33 @@
             <tbody>
                 <?php foreach ($categories as $category) { ?>
                     <tr>
-                        <th scope="row" class="fst-italic"><?= $category->id_category ?></th>
+                        <th scope="row" class="fst-italic fw-normal"><?= $category->id_category ?></th>
                         <td><?= $category->name ?></td>
                         <td><a class="text-dark" href="/controllers/dashboard/categories/update-ctrl.php?id_category=<?= $category->id_category ?>"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                        <td><a data-category="<?= $category->id_category ?>" class="text-dark deleteBtn"><i class="fa-solid fa-trash-can"></i></a></td>
+                        <!-- Button trigger modal -->
+                        <td><a type="button" data-category="<?= $category->id_category ?>" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-dark modalOpenBtn"><i class="fa-solid fa-trash-can"></i></a></td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-danger" id="exampleModalLabel">Supprimer une catégorie</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Confirmez-vous de cette suppression de catégorie?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger deleteBtn" data-bs-dismiss="modal">Oui</button>
+                <button type="button" data-bs-dismiss="modal" class="btn btn-dark noDeleteBtn">Non</button>
+            </div>
+        </div>
     </div>
 </div>
