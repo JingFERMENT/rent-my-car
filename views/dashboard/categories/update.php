@@ -6,7 +6,7 @@
         <!-- MODIFICATION CATEGORIE -->
         <div>
             <label for="name" class="form-label fw-bold">Nom de la catégorie</label>
-            <input type="text" name="name" id="name" value="<?=$category->getName() ?? ''?>" class="form-control" aria-describedby="nameHelp" minlength="2" maxlength="50" pattern="<?= REGEX_NAME_CATEGORY ?>" required>
+            <input type="text" name="name" id="name" value="<?=$category->name ?? ''?>" class="form-control" aria-describedby="nameHelp" minlength="2" maxlength="50" pattern="<?= REGEX_NAME_CATEGORY ?>" required>
         </div>
         <!-- BOUTON VALIDATION -->
         <button type="submit" class="btn btn-dark text-white my-4" value="Envoyer">Modifier</button>

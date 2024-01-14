@@ -5,7 +5,7 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
     $title = 'ajouter un véhicule';
     $categories = Category::getAll();
-    $ID = array_column($categories,'id_category');
+    $ID = array_column($categories, 'id_category');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
@@ -16,7 +16,7 @@ try {
         if (empty($id_category)) { // pour les champs obligatoires
             $errors['id_category'] = 'La catégorie est obligatoire.';
         } else { // validation des données
-            $isOk = in_array($id_category, $ID);      
+            $isOk = in_array($id_category, $ID);
             if (!$isOk) {
                 $errors['id_category'] = 'Votre choix est invalide.';
             }
@@ -57,7 +57,7 @@ try {
             // validation des données
             $isOk = filter_var($registration, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/' . REGEX_REGISTRATION . '/')));
             if (!$isOk) {
-                $errors['model'] = 'Le numéro d\'immatriculation est invalide.';
+                $errors['registration'] = 'Le numéro d\'immatriculation est invalide.';
             }
         }
 
@@ -68,35 +68,57 @@ try {
             // validation des données
             $isOk = filter_var($mileage, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/' . REGEX_MILEAGE . '/')));
             if (!$isOk) {
-                $errors['model'] = 'Le kilométrage est invalide.';
+                $errors['mileage'] = 'Le kilométrage est invalide.';
             }
         }
 
+        $filename = null;
         // FILE: 
-        try {
-            // quand il y a une erreur 
-            if (!empty($_FILES['photo']['error'])) {
-                throw new Exception("Une erreur s'est produite.");
+        if ($_FILES['photo']['error'] !== 4) {
+            try {
+                // quand il y a une erreur 
+                if (!empty($_FILES['photo']['error'])) {
+                    throw new Exception("Une erreur s'est produite.");
+                }
+
+                // quand le format n'est pas correct
+                if (!in_array($_FILES['photo']['type'], ARRAY_TYPES_MIMES)) {
+                    throw new Exception("Le format de l'image n'est pas correct.");
+                }
+
+                if ($_FILES['photo']['size'] > UPLOAD_MAX_SIZE) {
+                    throw new Exception("Le fichier est trop lourd");
+                }
+
+                $filename = uniqid('img_');
+                $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+                $from = $_FILES['photo']['tmp_name'];
+
+                $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
+                $toFront = '/public/uploads/vehicles/' . $filename . '.' . $extension;
+                move_uploaded_file($from, $toBack);
+
+            } catch (\Throwable $th) {
+                $errors['photo'] = $th->getMessage();
             }
+        }
 
-            // quand le format n'est pas correct
-            if (!in_array($_FILES['photo']['type'], ARRAY_TYPES_MIMES)) {
-                throw new Exception("Le format de l'image n'est pas correct.");
+        if (empty($errors)) {
+
+            $vehicle = new Vehicle();
+            $vehicle->setBrand($brand);
+            $vehicle->setModel($model);
+            $vehicle->setRegistration($registration);
+            $vehicle->setMileage($mileage);
+            $vehicle->setPicture($filename);
+            $vehicle->setId_category($id_category);
+
+            $insertResult = $vehicle->insertVehicle();
+            if ($insertResult) {
+                $msg = 'Le véhicule a bien été pris en compte.';
+            } else {
+                $msg = 'Erreur, le véhicule n\'a pas été ajouté.';
             }
-
-            if ($_FILES['photo']['size'] > UPLOAD_MAX_SIZE) {
-                throw new Exception("Le fichier est trop lourd");
-            }
-
-            $filename = uniqid('img_');
-            $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-            $from = $_FILES['photo']['tmp_name'];
-            $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
-            $toFront = '/public/uploads/vehicles/' . $filename . '.' . $extension;
-            move_uploaded_file($from, $toBack);
-
-        } catch (\Throwable $th) {
-            $errors['photo'] = $th->getMessage();
         }
     }
 } catch (Throwable $e) {

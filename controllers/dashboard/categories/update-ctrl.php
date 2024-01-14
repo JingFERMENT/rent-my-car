@@ -11,6 +11,7 @@ try {
     // attention c'est en GET pour récupérer les données 
     $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
     $category = Category::get($idCategory);
+    
 
     if (!$category) {
         header('location: /controllers/dashboard/categories/list-ctrl.php');

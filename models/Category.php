@@ -126,7 +126,7 @@ class Category
      * 
      * @return Category
      */
-    public static function get(?int $id_category): Category|false
+    public static function get(?int $id_category): object|false
     {
         // appel de la méthode static connect
         $pdo = Database::connect();
@@ -141,9 +141,9 @@ class Category
 
         $result = $sth->fetch(PDO::FETCH_OBJ);
 
-        $category = new Category($result->name, $result->id_category);
+        // $category = new Category($result->name, $result->id_category);
 
-        return $category;
+        return $result;
     }
 
     /**

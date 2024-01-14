@@ -24,13 +24,13 @@
             <!-- modèle -->
             <div class="col-12 col-lg-6 mb-3 p-2">
                 <label for="model" class="form-label fw-bold">Modèle</label>
-                <input type="text" name="model" value="<?=$model ?? ''?>" class="form-control" id="brand" aria-describedby="modelHelp" placeholder="C3" minlength="2" maxlength="50" pattern="<?=REGEX_MODEL?>" required>
+                <input type="text" name="model" value="<?=$model ?? ''?>" class="form-control" id="model" aria-describedby="modelHelp" placeholder="C3" minlength="2" maxlength="50" pattern="<?=REGEX_MODEL?>" required>
                 <span class="text-danger"><?= $errors['model'] ?? '' ?></span>
             </div>
             <!-- registration -->
             <div class="col-12 col-lg-6 mb-3 p-2">
                 <label for="registration" class="form-label fw-bold">Numéro d'immatriculation</label>
-                <input type="text" name="registration" value="<?=$registration ?? ''?>" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="exemple : AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_NAME_CATEGORY ?>" required>
+                <input type="text" name="registration" value="<?=$registration ?? ''?>" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="exemple : AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_REGISTRATION ?>" required>
                 <span class="text-danger"><?= $errors['registration'] ?? '' ?></span>
             </div>
             <!-- mileage-->

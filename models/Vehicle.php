@@ -7,33 +7,33 @@ require_once(__DIR__ . '/Category.php');
 class Vehicle
 {
     // ! déclaration des attributs
-    
+
     private ?int $id_vehicle;
-    
+
     private string $brand;
     private string $model;
     private string $registration;
     private ?int $mileage;
-    
+
     private ?string $picture;
     private ?string $created_at;
     private ?string $updated_at;
-    private ?string $deleted_at; 
+    private ?string $deleted_at;
 
     private ?int $id_category;
-    private Category|false $category;
-   
+    // private Category|false $category;
+
 
     // Méthode magique appelée automatiquement lors de l'instanciation de la classe 'Vehicles'
     //* Elle assigne toutes les properties à la création de l'objet
 
- 
+
     public function __construct(
         // paramètre obligatoire en premier / facultatif ensuite
         string $brand = '',
         string $model = '',
         string $registration = '',
-        
+
         ?int $mileage = 0,
         ?string $picture = null,
 
@@ -42,8 +42,6 @@ class Vehicle
         string $deleted_at = null,
         int $id_vehicle = null,
         int $id_category = null
-
-        
     ) {
         $this->id_category = $id_category;
         $this->id_vehicle = $id_vehicle;
@@ -55,10 +53,10 @@ class Vehicle
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
         $this->deleted_at = $deleted_at;
-        $this->category = Category::get($id_category);
+        //$this->category = Category::get($id_category);
     }
 
-//==================== ID VEHICLE ====================
+    //==================== ID VEHICLE ====================
 
     /**
      * Set the value of id_vehicle
@@ -76,7 +74,7 @@ class Vehicle
         return $this->id_vehicle;
     }
 
-//==================== BRAND ====================
+    //==================== BRAND ====================
 
     /**
      * Set the value of brand
@@ -94,7 +92,7 @@ class Vehicle
         return $this->brand;
     }
 
-//==================== MODEL ====================
+    //==================== MODEL ====================
 
     /**
      * Set the value of model
@@ -113,7 +111,7 @@ class Vehicle
         return $this->model;
     }
 
-//==================== REGISTRATION ====================
+    //==================== REGISTRATION ====================
     /**
      * Set the value of registration
      */
@@ -130,7 +128,7 @@ class Vehicle
         return $this->registration;
     }
 
-//==================== Mileage ====================
+    //==================== Mileage ====================
     /**
      * Set the value of mileage
      */
@@ -142,16 +140,16 @@ class Vehicle
     /**
      * Get the value of mileage
      */
-    public function getMileage(): int
+    public function getMileage(): ?int
     {
         return $this->mileage;
     }
 
-//==================== PICTURE ====================
+    //==================== PICTURE ====================
     /**
      * Set the value of picture
      */
-    public function setPicture(?string $picture):void
+    public function setPicture(?string $picture): void
     {
         $this->picture = $picture;
     }
@@ -160,18 +158,18 @@ class Vehicle
     /**
      * Get the value of picture
      */
-    public function getPicture():?string
+    public function getPicture(): ?string
     {
         return $this->picture;
     }
 
 
-//==================== CREATED_AT ====================
+    //==================== CREATED_AT ====================
 
     /**
      * Get the value of created_at
-     */ 
-    public function getCreated_at():?string
+     */
+    public function getCreated_at(): string
     {
         return $this->created_at;
     }
@@ -180,49 +178,47 @@ class Vehicle
      * Set the value of created_at
      *
      * @return  self
-     */ 
+     */
     public function setCreated_at($created_at)
     {
         $this->created_at = $created_at;
-
     }
 
-//==================== UPDATED_AT ====================
+    //==================== UPDATED_AT ====================
     /**
      * Get the value of updated_at
-     */ 
-    public function getUpdated_at():?string
+     */
+    public function getUpdated_at(): ?string
     {
         return $this->updated_at;
     }
 
     /**
      * Set the value of updated_at
-     */ 
+     */
     public function setUpdated_at(?string $updated_at)
     {
         $this->updated_at = $updated_at;
     }
 
-//==================== DELETED_AT ====================
+    //==================== DELETED_AT ====================
     /**
      * Get the value of deleted_at
-     */ 
-    public function getDeleted_at():string
+     */
+    public function getDeleted_at(): ?string
     {
         return $this->deleted_at;
     }
 
     /**
      * Set the value of deleted_at
-     */ 
+     */
     public function setDeleted_at(string $deleted_at)
     {
         $this->deleted_at = $deleted_at;
-
     }
 
-//==================== ID CATEGORY ====================
+    //==================== ID CATEGORY ====================
 
     /**
      * Set the value of id_category
@@ -230,7 +226,7 @@ class Vehicle
     public function setId_category(int $id_category): void
     {
         $this->id_category = $id_category;
-        $this->category = Category::get($id_category);
+        //$this->category = Category::get($id_category);
     }
 
     /**
@@ -241,33 +237,49 @@ class Vehicle
         return $this->id_category;
     }
 
-//==================== CATEGORY ====================
+    //==================== CATEGORY ====================
     /**
      * Set the value of category
      */
     public function setCategory(int $id_category): void
     {
-        $this->category = Category::get($id_category);
+        //$this->category = Category::get($id_category);
     }
 
     /**
      * Get the value of name
      */
-    public function getCategory(): Category
+    //public function getCategory(): Category
+    //{
+        //return $this->category;
+    //}
+
+    public function insertVehicle()
     {
-        return $this->category;
+        $pdo = Database::connect();
+
+        $sql = 'INSERT INTO `vehicles`
+        (`id_vehicle`, `brand`,`model`,
+        `registration`,`mileage`,`picture`,
+        `id_category`) VALUES 
+        (:id_vehicle,:brand, :model,
+        :registration,:mileage,:picture,
+        :id_category );';
+
+        // préparer pour la sécurité de l'injection de SQL
+        $sth = $pdo->prepare($sql);
+
+        // méthode permttant de définir un marqueur et une valeur // appartenir à PDO Statement 
+        $sth->bindValue(':id_vehicle', $this->getId_vehicle());
+        $sth->bindValue(':brand', $this->getBrand());
+        $sth->bindValue(':model', $this->getModel());
+        $sth->bindValue(':registration', $this->getRegistration());
+        $sth->bindValue(':mileage', $this->getMileage());
+        $sth->bindValue(':picture', $this->getPicture());
+        $sth->bindValue(':id_category', $this->getId_category());
+
+        $sthResult = $sth->execute();
+
+        return $sthResult;
     }
-
-    public function insertVehicle() {
-        
-    }
-
-
-
-
-
-
-
-
-
 }
