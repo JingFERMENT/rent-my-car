@@ -1,3 +1,4 @@
+<!-- petit astérix pour les données obligatoire -->
 <div class="py-2 d-flex flex-column justify-content-center align-items-center">
     <h1 class="text-center pt-5 pb-3">Ajouter un véhicule</h1>
     <span class="text-success fw-bold"><?= $msg ?? '' ?></span>
@@ -44,7 +45,7 @@
                 <label for="photo" class="form-label fw-bold">Photo de véhicule</label>
                 <input type="file" name="photo" value="<?$filename?>" class="form-control" id="photo" accept=".png, image/jpeg">
                 <span class="text-danger"><?= $errors['photo'] ?? '' ?></span>
-                <img class="img-fluid m-auto mt-3" src="<?= $toFront ?? '' ?>">
+                <img class="img-fluid m-auto mt-3" src="<?= $picture ?? '' ?>">
             </div>
             <!-- bouton -->
             <div class="col-12 mb-3 p-2 text-center">

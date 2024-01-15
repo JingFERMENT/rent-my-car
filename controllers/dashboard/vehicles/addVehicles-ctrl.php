@@ -6,7 +6,7 @@ try {
     $title = 'Ajouter un véhicule';
     $categories = Category::getAll();
     // transformer un tableau avec les objets en un tableau avec les valeurs
-    
+
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
@@ -68,18 +68,20 @@ try {
 
         if (!empty($mileage)) { // pour les champs non-obligatoires
             // validation des données
-            $isOk = filter_var($mileage, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/' . REGEX_MILEAGE . '/')));
+            // $isOk = filter_var($mileage, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/' . REGEX_MILEAGE . '/')));
+            $isOk = filter_var($mileage, FILTER_VALIDATE_INT);
             if (!$isOk) {
-                $errors['mileage'] = 'Le kilométrage est invalide.';
+                $errors['mileage'] = 'Le nombre de kilomètre est invalide.';
             }
         }
 
-        $filename = null;
+        $pictureToSave = null;
         // FILE: 
-        if ($_FILES['photo']['error'] !== 4) {
+        // if ($_FILES['photo']['error'] != 4) {}
+        if (!empty($_FILES['photo']['name'])) {
             try {
-                // quand il y a une erreur 
-                if (!empty($_FILES['photo']['error'])) {
+                
+                if ($_FILES['photo']['error'] != 0) {
                     throw new Exception("Une erreur s'est produite.");
                 }
 
@@ -92,14 +94,16 @@ try {
                     throw new Exception("Le fichier est trop lourd");
                 }
 
+                // une chaine de caractère unique 
                 $filename = uniqid('img_');
                 $extension = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
+                // le fichier venait de dossier tmp_name
                 $from = $_FILES['photo']['tmp_name'];
 
                 $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
-                $picture = '/public/uploads/vehicles/' . $filename . '.' . $extension;
+                $pictureToSave =  $filename . '.' . $extension; // enregistrer uniquement le nom du fichier
+                $pictureForFront = '/public/uploads/vehicles/' . $filename . '.' . $extension;
                 move_uploaded_file($from, $toBack);
-
             } catch (\Throwable $th) {
                 $errors['photo'] = $th->getMessage();
             }
@@ -114,10 +118,11 @@ try {
             $vehicle->setModel($model);
             $vehicle->setRegistration($registration);
             $vehicle->setMileage($mileage);
-            $vehicle->setPicture($picture);
+            $vehicle->setPicture($pictureToSave);
             $vehicle->setId_category($id_category);
 
             $insertResult = $vehicle->insertVehicle();
+
             if ($insertResult) {
                 $msg = 'Le véhicule a bien été pris en compte.';
             } else {
