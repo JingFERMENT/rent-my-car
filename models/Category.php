@@ -124,7 +124,7 @@ class Category
      * 
      * @param int $id_category
      * 
-     * @return Category
+     * @return object
      */
     public static function get(?int $id_category): object|false
     {

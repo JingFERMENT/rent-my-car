@@ -1,6 +1,7 @@
 <div class="py-2 text-center">
     <h1 class="pt-5">Liste des catégories</h1>
     <span class="text-success fw-bold"><?= $msg ?? '' ?></span>
+    <span class="text-danger fw-bold"><?= $error ?? '' ?></span>
     <div class="d-flex justify-content-end">
         <a href="/controllers/dashboard/categories/add-ctrl.php"><button type="submit" class="btn btn-dark text-white my-4" value="Envoyer">Ajouter une catégorie</button></a>
     </div>
@@ -16,7 +17,9 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($categories as $category) { ?>
+                <?php 
+                
+                foreach ($categories as $category) { ?>
                     <tr>
                         <th scope="row" class="fst-italic fw-normal"><?= $category->id_category ?></th>
                         <td><?= $category->name ?></td>
@@ -24,7 +27,7 @@
                         <!-- Button trigger modal -->
                         <td><a type="button" data-category="<?= $category->id_category ?>" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-dark modalOpenBtn"><i class="fa-solid fa-trash-can"></i></a></td>
                     </tr>
-                <?php } ?>
+                    <?php } ?>
             </tbody>
         </table>
     </div>

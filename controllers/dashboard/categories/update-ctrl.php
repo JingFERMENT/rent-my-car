@@ -39,6 +39,9 @@ try {
             $errors['name'] = 'Cette catégorie existe déjà.';
         }
 
+        // vérifier s'il y a des véhicules qui sont liés à une categorie 
+        
+
         // si tout est OK 
         if (empty($errors)) {
             $category = new Category();

@@ -21,12 +21,11 @@ class Vehicle
     private ?string $deleted_at;
 
     private ?int $id_category;
-    // private Category|false $category;
+    //private Object|false $category;
 
 
     // Méthode magique appelée automatiquement lors de l'instanciation de la classe 'Vehicles'
     //* Elle assigne toutes les properties à la création de l'objet
-
 
     public function __construct(
         // paramètre obligatoire en premier / facultatif ensuite
@@ -241,10 +240,10 @@ class Vehicle
     /**
      * Set the value of category
      */
-    public function setCategory(int $id_category): void
-    {
+    //public function setCategory(int $id_category): void
+    //{
         //$this->category = Category::get($id_category);
-    }
+    //}
 
     /**
      * Get the value of name
@@ -282,4 +281,33 @@ class Vehicle
 
         return $sthResult;
     }
+
+
+    /**
+     * 
+     * Méthode permettant de retourner les véhicules concernés d'une id_category
+     * 
+     * @param int $id_category
+     * 
+     * @return bool
+     */
+    public static function getVehiclesFromIdCategory(?int $id_category): bool
+    {
+        // appel de la méthode static connect
+        $pdo = Database::connect();
+
+        $sql = 'SELECT COUNT(*) FROM `vehicles` WHERE `id_category` =:id_category;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+
+        $sth->execute();
+
+        $result = $sth->fetchColumn();
+
+        return $result>0;
+    }
+
+
 }
