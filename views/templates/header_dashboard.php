@@ -47,7 +47,7 @@
         </li>
       </ul>
     </div>
-    <div id="page-content-wrapper">
+    <div id="page-content-wrapper" class="mx-auto">
 
 
       <a href="/index.php" class="d-md-none btn btn-warning text-white my-4" value="Retour">

@@ -329,7 +329,7 @@ class Vehicle
     {
         $pdo = Database::connect();
 
-        $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `vehicles`.`id_category`, `name`
+        $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `name`
         FROM `vehicles` JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category`)';
 
         $sth = $pdo->query($sql);

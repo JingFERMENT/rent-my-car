@@ -6,7 +6,8 @@
         <div class="d-flex flex-wrap">
             <!-- categorie -->
             <div class="col-12 mb-3 p-2">
-                <label for="id_category" class="form-label fw-bold">Catégorie de véhicule</label>
+                <label for="id_category" class="form-label fw-bold">Catégorie de véhicule<span class="text-danger">
+                    *<span></label>
                 <select name="id_category" class="form-select" aria-label="Default select example">
                     <option selected disabled>--Sélectionnez votre catégorie--</option>
                     <?php foreach ($categories as $category) {
@@ -18,25 +19,29 @@
             </div>
             <!-- marque -->
             <div class="col-12 col-lg-6 mb-3 p-2">
-                <label for="brand" class="form-label fw-bold">Marque</label>
+                <label for="brand" class="form-label fw-bold">Marque<span class="text-danger">
+                    *<span></label>
                 <input type="text" name="brand" value="<?=$brand ?? ''?>" class="form-control" id="brand" aria-describedby="brandHelp" placeholder="Citroën" minlength="2" maxlength="50" pattern="<?=REGEX_BRAND ?>" required>
                 <span class="text-danger"><?= $errors['brand'] ?? '' ?></span>
             </div>
             <!-- modèle -->
             <div class="col-12 col-lg-6 mb-3 p-2">
-                <label for="model" class="form-label fw-bold">Modèle</label>
+                <label for="model" class="form-label fw-bold">Modèle<span class="text-danger">
+                    *<span></label>
                 <input type="text" name="model" value="<?=$model ?? ''?>" class="form-control" id="model" aria-describedby="modelHelp" placeholder="C3" minlength="2" maxlength="50" pattern="<?=REGEX_MODEL?>" required>
                 <span class="text-danger"><?= $errors['model'] ?? '' ?></span>
             </div>
             <!-- registration -->
             <div class="col-12 col-lg-6 mb-3 p-2">
-                <label for="registration" class="form-label fw-bold">Plaques d'immatriculation</label>
+                <label for="registration" class="form-label fw-bold">Plaques d'immatriculation<span class="text-danger">
+                    *<span></label>
                 <input type="text" name="registration" value="<?=$registration ?? ''?>" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_REGISTRATION ?>" required>
                 <span class="text-danger"><?= $errors['registration'] ?? '' ?></span>
             </div>
             <!-- mileage-->
             <div class="col-12 col-lg-6 mb-3 p-2">
-                <label for="mileage" class="form-label fw-bold">Kilométrage</label>
+                <label for="mileage" class="form-label fw-bold">Kilométrage<span class="text-danger">
+                    *<span></label>
                 <input type="int" name="mileage" value="<?=$mileage ?? ''?>" class="form-control" id="mileage" placeholder="1234" minlength="2" maxlength="50" pattern="<?= REGEX_MILEAGE ?>">
                 <span class="text-danger"><?= $errors['mileage'] ?? '' ?></span>
             </div>
@@ -51,6 +56,7 @@
             <div class="col-12 mb-3 p-2 text-center">
                 <button type="submit" class="btn btn-dark text-white" value="Ajouter">Valider</button>
             </div>
+            <small class="text-danger fw-lighter fst-italic"><span class="text-danger">*</span> champs obligatoires</small>
         </div>
         <!-- BOUTON VALIDATION -->
 

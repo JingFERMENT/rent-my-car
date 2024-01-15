@@ -66,7 +66,9 @@ try {
         // Kilométrage
         $mileage = intval(filter_input(INPUT_POST, 'mileage', FILTER_SANITIZE_NUMBER_INT));
 
-        if (!empty($mileage)) { // pour les champs non-obligatoires
+        if (empty($mileage)) { // pour les champs obligatoires
+            $errors['mileage'] = 'Le nombre de kilomètre est obligatoire.';
+        }else {
             // validation des données
             // $isOk = filter_var($mileage, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/' . REGEX_MILEAGE . '/')));
             $isOk = filter_var($mileage, FILTER_VALIDATE_INT);

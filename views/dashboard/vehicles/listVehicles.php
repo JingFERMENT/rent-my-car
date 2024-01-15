@@ -13,8 +13,10 @@
                     <th scope="col">Catégorie</th>
                     <th scope="col">Marque</th>
                     <th scope="col">Modèle</th>
-                    <th scope="col" class='fst-italic'>Modifier</th>
-                    <th scope="col" class='fst-italic'>Supprimer</th>
+                    <th scope="col">Kilométrage</th>
+                    <th scope="col">Créé le</th>
+                    <th scope="col">Modifier</th>
+                    <th scope="col">Supprimer</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,6 +28,8 @@
                         <th scope="row" class="fst-italic fw-normal"><?= $vehicle->name?></th>
                         <td><?= $vehicle->brand?></td>
                         <td><?= $vehicle->model?></td>
+                        <td><?= $vehicle->mileage?></td>
+                        <td><?= (new DateTime($vehicle->created_at))->format('d-m-Y')?></td>
                         <td><a class="text-dark" href="/controllers/dashboard/vehicles/updateVehicles-ctrl.php?id_vehicle=<?= $vehicle->id_vehicle?>"><i class="fa-solid fa-pen-to-square"></i></a></td>
                         <!-- Button trigger modal -->
                         <td><a type="button" data-category="" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-dark modalOpenBtn"><i class="fa-solid fa-trash-can"></i></a></td>
