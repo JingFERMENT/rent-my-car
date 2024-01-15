@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../../../models/Category.php');
 
 // mettre de manière globale
 try {
-    $title = 'ajouter une catégorie';
+    $title = 'Ajouter une catégorie';
 
     // si le formulaire est envoyé
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -6,7 +6,7 @@ require_once(__DIR__ . '/../../../models/Category.php');
 
 // mettre de manière globale
 try {
-    $title = 'modifier une catégorie';
+    $title = 'Modifier une catégorie';
 
     // attention c'est en GET pour récupérer les données 
     $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>
-    Rent my car - <?= $title ?? '' ?>
+    <?= $title ?? '' ?> | Rent my car
   </title>
   <!-- balise open graphe -->
   <!-- css bootstrap file -->
@@ -37,7 +37,7 @@
           <a href="/controllers/dashboard/categories/list-ctrl.php"><i class="fa-solid fa-layer-group"></i>Categories</a>
         </li>
         <li>
-          <a href="/controllers/dashboard/vehicles/addVehicles-ctrl.php"><i class="fa-solid fa-car"></i>Véhicules</a>
+          <a href="/controllers/dashboard/vehicles/listVehicles-ctrl.php"><i class="fa-solid fa-car"></i>Véhicules</a>
         </li>
         <li>
           <a href="#"><i class="fa-solid fa-user"></i>Clients</a>

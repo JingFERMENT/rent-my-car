@@ -4,7 +4,7 @@ require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 
 try {
-    $title = 'liste des catégories'; 
+    $title = 'Liste des catégories'; 
     $categories = Category::getAll();
    
     // on récupère les messages stockés dans la session.

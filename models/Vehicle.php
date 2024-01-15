@@ -242,7 +242,7 @@ class Vehicle
      */
     //public function setCategory(int $id_category): void
     //{
-        //$this->category = Category::get($id_category);
+    //$this->category = Category::get($id_category);
     //}
 
     /**
@@ -250,36 +250,51 @@ class Vehicle
      */
     //public function getCategory(): Category
     //{
-        //return $this->category;
+    //return $this->category;
     //}
 
-    public function insertVehicle()
+    // créer un objet donc une méthode non-static
+    public function insertVehicle(): bool
     {
         $pdo = Database::connect();
 
-        $sql = 'INSERT INTO `vehicles`
-        (`id_vehicle`, `brand`,`model`,
-        `registration`,`mileage`,`picture`,
-        `id_category`) VALUES 
-        (:id_vehicle,:brand, :model,
-        :registration,:mileage,:picture,
-        :id_category );';
+        // attention aux bonnes correspondanes 
+        $sql = 'INSERT INTO `vehicles`(`brand`,`model`,`registration`,`mileage`,`picture`,`id_category`) 
+        VALUES (:brand, :model,:registration,:mileage,:picture,:id_category );';
 
         // préparer pour la sécurité de l'injection de SQL
         $sth = $pdo->prepare($sql);
+        // $sth = statement handle
 
         // méthode permttant de définir un marqueur et une valeur // appartenir à PDO Statement 
-        $sth->bindValue(':id_vehicle', $this->getId_vehicle());
+        // type attendu des valeurs : 3ème paramètre de bindValue par défaut c'est un string 
+        // méthode bindValue qui appartient à la PDO Statement
         $sth->bindValue(':brand', $this->getBrand());
         $sth->bindValue(':model', $this->getModel());
         $sth->bindValue(':registration', $this->getRegistration());
-        $sth->bindValue(':mileage', $this->getMileage());
+        $sth->bindValue(':mileage', $this->getMileage(), PDO::PARAM_INT);
         $sth->bindValue(':picture', $this->getPicture());
-        $sth->bindValue(':id_category', $this->getId_category());
+        $sth->bindValue(':id_category', $this->getId_category(), PDO::PARAM_INT);
+
+        // executer les requêtes 
+        // méthode execute qui appartient à la PDO Statement
+        // pour savoir la requête est bien executé (pas p)
+        // PDOStatement::rowCount — Retourne le nombre de lignes affectées par le dernier appel à la fonction PDOStatement::execute()
+
 
         $sthResult = $sth->execute();
+        // $nbRows = $sth->rowCount();
 
-        return $sthResult;
+        //   if($nbRows>0) {
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+
+        // return $sth->rowCount() > 0 ? true: false ;
+        return $sth->rowCount() > 0;
+        // return (bool) $sth->rowCount();
+
     }
 
 
@@ -306,8 +321,21 @@ class Vehicle
 
         $result = $sth->fetchColumn();
 
-        return $result>0;
+        return $result > 0;
     }
 
 
+    public static function getAllVehicles(): array
+    {
+        $pdo = Database::connect();
+
+        $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `vehicles`.`id_category`, `name`
+        FROM `vehicles` JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category`)';
+
+        $sth = $pdo->query($sql);
+
+        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+
+        return $result;
+    }
 }

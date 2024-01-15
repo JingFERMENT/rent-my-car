@@ -3,22 +3,24 @@ require_once(__DIR__ . '/../../../models/Vehicle.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 
 try {
-    $title = 'ajouter un véhicule';
+    $title = 'Ajouter un véhicule';
     $categories = Category::getAll();
-    $ID = array_column($categories, 'id_category');
+    // transformer un tableau avec les objets en un tableau avec les valeurs
+    
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
-
         // Catégorie
         $id_category = intval(filter_input(INPUT_POST, 'id_category', FILTER_SANITIZE_NUMBER_INT));
 
         if (empty($id_category)) { // pour les champs obligatoires
             $errors['id_category'] = 'La catégorie est obligatoire.';
         } else { // validation des données
+            $ID = array_column($categories, 'id_category');
+            // comparer les deux tableaux avec les valeurs 
             $isOk = in_array($id_category, $ID);
             if (!$isOk) {
-                $errors['id_category'] = 'Votre choix est invalide.';
+                $errors['id_category'] = 'La catégorie n\'existe pas.';
             }
         }
 
@@ -95,7 +97,7 @@ try {
                 $from = $_FILES['photo']['tmp_name'];
 
                 $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
-                $toFront = '/public/uploads/vehicles/' . $filename . '.' . $extension;
+                $picture = '/public/uploads/vehicles/' . $filename . '.' . $extension;
                 move_uploaded_file($from, $toBack);
 
             } catch (\Throwable $th) {
@@ -104,13 +106,15 @@ try {
         }
 
         if (empty($errors)) {
+            // autre méthode : 
+            // $vehicle = new Vehicle($brand, $model,$registration,$mileage,$filename,$id_category);
 
             $vehicle = new Vehicle();
             $vehicle->setBrand($brand);
             $vehicle->setModel($model);
             $vehicle->setRegistration($registration);
             $vehicle->setMileage($mileage);
-            $vehicle->setPicture($filename);
+            $vehicle->setPicture($picture);
             $vehicle->setId_category($id_category);
 
             $insertResult = $vehicle->insertVehicle();

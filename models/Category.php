@@ -79,7 +79,7 @@ class Category
      * 
      * @return bool
      */
-    public function insert()
+    public function insert():bool
     {
         $pdo = Database::connect();
 

@@ -5,7 +5,7 @@
         <div class="d-flex flex-wrap">
             <!-- categorie -->
             <div class="col-12 mb-3 p-2">
-                <label for="id_category" class="form-label fw-bold">Catégorie</label>
+                <label for="id_category" class="form-label fw-bold">Catégorie de véhicule</label>
                 <select name="id_category" class="form-select" aria-label="Default select example">
                     <option selected disabled>--Sélectionnez votre catégorie--</option>
                     <?php foreach ($categories as $category) {
@@ -29,20 +29,20 @@
             </div>
             <!-- registration -->
             <div class="col-12 col-lg-6 mb-3 p-2">
-                <label for="registration" class="form-label fw-bold">Numéro d'immatriculation</label>
-                <input type="text" name="registration" value="<?=$registration ?? ''?>" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="exemple : AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_REGISTRATION ?>" required>
+                <label for="registration" class="form-label fw-bold">Plaques d'immatriculation</label>
+                <input type="text" name="registration" value="<?=$registration ?? ''?>" class="form-control" id="registration" aria-describedby="registrationHelp" placeholder="AA-229-AA" minlength="2" maxlength="50" pattern="<?= REGEX_REGISTRATION ?>" required>
                 <span class="text-danger"><?= $errors['registration'] ?? '' ?></span>
             </div>
             <!-- mileage-->
             <div class="col-12 col-lg-6 mb-3 p-2">
                 <label for="mileage" class="form-label fw-bold">Kilométrage</label>
-                <input type="text" name="mileage" value="<?=$mileage ?? ''?>" class="form-control" id="mileage" placeholder="1234" minlength="2" maxlength="50" pattern="<?= REGEX_MILEAGE ?>">
+                <input type="int" name="mileage" value="<?=$mileage ?? ''?>" class="form-control" id="mileage" placeholder="1234" minlength="2" maxlength="50" pattern="<?= REGEX_MILEAGE ?>">
                 <span class="text-danger"><?= $errors['mileage'] ?? '' ?></span>
             </div>
             <!-- photo-->
             <div class="col-12 mb-3 p-2">
                 <label for="photo" class="form-label fw-bold">Photo de véhicule</label>
-                <input type="file" name="photo" value="<??>" class="form-control" id="photo" accept=".png, image/jpeg">
+                <input type="file" name="photo" value="<?$filename?>" class="form-control" id="photo" accept=".png, image/jpeg">
                 <span class="text-danger"><?= $errors['photo'] ?? '' ?></span>
                 <img class="img-fluid m-auto mt-3" src="<?= $toFront ?? '' ?>">
             </div>
