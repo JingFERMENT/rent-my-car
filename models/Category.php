@@ -102,7 +102,7 @@ class Category
      * 
      * @return array
      */
-    public static function getAll(): array
+    public static function getAll(): array|false
     {
         // appel de la méthode static connect
         $pdo = Database::connect();
@@ -160,7 +160,7 @@ class Category
 
         $pdo = Database::connect();
 
-        $sql = 'UPDATE `categories` SET name = :name WHERE `id_category` =:id_category;';
+        $sql = 'UPDATE `categories` SET `name` =:name WHERE `id_category` =:id_category;';
 
         $sth = $pdo->prepare($sql);
 

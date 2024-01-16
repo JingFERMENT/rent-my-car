@@ -254,6 +254,12 @@ class Vehicle
     //}
 
     // créer un objet donc une méthode non-static
+    /**
+     * 
+     * Méthode permettant d'effectuer l'ajout d'un véhicule en base de données
+     * 
+     * @return bool
+     */
     public function insertVehicle(): bool
     {
         $pdo = Database::connect();
@@ -325,18 +331,73 @@ class Vehicle
     }
 
 
-    public static function getAllVehicles(): array
+    /**
+     * 
+     * Méthode permettant de retourner la liste des véhicules
+     * 
+     * @return array
+     */
+    public static function getAllVehicles(): array|false
     {
         $pdo = Database::connect();
 
         // attention sur JOIN
-        $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `name`
-        FROM `vehicles` INNER JOIN `categories` ON (`vehicles`.`id_category` = `categories`.`id_category`)';
+        // $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `categories`.`name`
+        // ON clé primaire et clé étrangère
+        $sql = 'SELECT * FROM `vehicles` 
+        INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) ORDER BY `categories`.`name`';
 
+        // pour pouvoir trier les catégories selon l'ordre alphabétique 
+        // envoyer sur URL / marqueur subsitutive 
+
+        // query : PDOStatement | false
         $sth = $pdo->query($sql);
 
         $result = $sth->fetchAll(PDO::FETCH_OBJ);
 
         return $result;
     }
+
+    public static function getOneVehicles(): 
+    {
+
+
+    }
+    /**
+     * 
+     * Méthode permettant de mettre à jour les informations des véhicules
+     * 
+     * @return bool
+     */
+    public function updateVehicles(): bool {
+
+        $pdo = Database::connect();
+
+        $sql = 'UPDATE `vehicles`  
+        SET `vehicles`.`brand` = :brand,
+        `vehicles`.`model` = :model,
+        `vehicles`.`registration` = :registration,
+        `vehicles`.`mileage` = :mileage,
+        `vehicles`.`picture` = :picture,
+        `vehicles`.`id_category` = :id_category,
+        WHERE 
+        `vehicles`.`id_vehicle` = :id_vehicle;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':brand', $this->getBrand());
+        $sth->bindValue(':model', $this->getModel());
+        $sth->bindValue(':registration', $this->getRegistration());
+        $sth->bindValue(':mileage', $this->getMileage());
+        $sth->bindValue(':picture', $this->getPicture());
+        $sth->bindValue(':id_category', $this->getId_category());
+
+        $result = $sth->execute();
+
+        return $result;
+
+        }
+
+
+
 }

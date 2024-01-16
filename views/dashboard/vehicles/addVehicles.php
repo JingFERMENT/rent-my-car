@@ -1,9 +1,8 @@
-<!-- petit astérix pour les données obligatoire -->
 <div class="card border-2">
     <div class="py-5 d-flex flex-column justify-content-center align-items-center">
         <h1 class="text-center pt-5 pb-3">Ajouter un véhicule</h1>
         <span class="text-success fw-bold"><?= $msg ?? '' ?></span>
-        <form class="col-12 col-lg-6" method="POST" enctype='multipart/form-data' novalidate>
+        <form class="col-12 col-lg-6" method="POST" enctype='multipart/form-data'>
             <div class="d-flex flex-wrap">
                 <!-- categorie -->
                 <div class="col-12 p-2">

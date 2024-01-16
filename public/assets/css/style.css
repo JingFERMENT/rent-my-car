@@ -149,3 +149,11 @@ input:placeholder-shown {
  }
 
 
+ .vehcilePicture {
+    max-width: 60px;
+    max-height: 40px;
+ }
+
+ tbody {
+   vertical-align: initial !important;
+ }
