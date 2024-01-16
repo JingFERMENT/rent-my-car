@@ -1,4 +1,4 @@
-<div class="card border-2 text-center d-flex flex-column justify-content-center align-items-center">
+<div class="card border-2 text-center py-2 d-flex flex-column justify-content-center align-items-center">
     <div class="p-5">
         <h1 class="text-center p-5">Ajouter une catégorie</h1>
         <span class="text-danger fw-bold"><?= $errors['name'] ?? '' ?></span>
