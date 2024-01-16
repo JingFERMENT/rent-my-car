@@ -358,9 +358,22 @@ class Vehicle
         return $result;
     }
 
-    public static function getOneVehicles(): 
+    public static function get(int $id_vehicle): object|false
     {
+        // appel de la méthode static connect
+        $pdo = Database::connect();
 
+        $sql = 'SELECT * FROM `vehicles` WHERE `id_vehicle` =:id_vehicle;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':id_vehicle', $id_vehicle, PDO::PARAM_INT);
+
+        $sth->execute();
+
+        $result = $sth->fetch(PDO::FETCH_OBJ);
+
+        return $result;
 
     }
     /**
@@ -379,7 +392,7 @@ class Vehicle
         `vehicles`.`registration` = :registration,
         `vehicles`.`mileage` = :mileage,
         `vehicles`.`picture` = :picture,
-        `vehicles`.`id_category` = :id_category,
+        `vehicles`.`id_category` = :id_category
         WHERE 
         `vehicles`.`id_vehicle` = :id_vehicle;';
 
@@ -391,6 +404,7 @@ class Vehicle
         $sth->bindValue(':mileage', $this->getMileage());
         $sth->bindValue(':picture', $this->getPicture());
         $sth->bindValue(':id_category', $this->getId_category());
+        $sth->bindValue(':id_vehicle', $this->getId_vehicle());
 
         $result = $sth->execute();
 

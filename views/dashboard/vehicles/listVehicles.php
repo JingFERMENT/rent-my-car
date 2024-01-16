@@ -16,7 +16,7 @@
                         <th scope="col">Modèle</th>
                         <th scope="col">Photo</th>
                         <!-- <th scope="col">Créé le</th> -->
-                        <th scope="col">Modifer</th>
+                        <th scope="col">Modifier</th>
                         <th scope="col">Supprimer</th>
                     </tr>
                 </thead>
@@ -31,11 +31,9 @@
                             <td><?= $vehicle->model ?></td>
                             <td>
                                 <?php
-                                if($vehicle->picture == NULL) {
-                                
-                            } else {
-                                echo "<img class=\"img-fluid vehcilePicture\" src=\"/public/uploads/vehicles/$vehicle->picture\"/>";
-                            }
+                                if($vehicle->picture !== NULL) {
+                                    echo "<img class=\"img-fluid vehcilePicture\" src=\"/public/uploads/vehicles/$vehicle->picture\"/>";
+                                }
                                 ?>
                             </td>
                             <!-- <td><?= (new DateTime($vehicle->created_at))->format('d-m-Y') ?></td> -->
