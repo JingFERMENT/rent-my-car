@@ -6,8 +6,8 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
 
     $title = "Modifier un véhicule";
-    // récupérer les catégories de toutes les véhicules
-    $vehicles = Vehicle::getAllVehicles();
+    // récupérer les véhicules
+    $vehicles = Vehicle::getAllVehicles(true);
   
     // récupérer la voiture à modifier
     $id_vehicle = intval(filter_input(INPUT_GET, 'id_vehicle', FILTER_SANITIZE_NUMBER_INT));

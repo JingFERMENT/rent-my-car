@@ -305,9 +305,6 @@ class Vehicle
 
 
     /**
-     * 
-     * Méthode permettant de retourner les véhicules concernés d'un id_category
-     * 
      * @param int $id_category
      * 
      * @return bool
@@ -331,13 +328,16 @@ class Vehicle
     }
 
 
+    
     /**
      * 
      * Méthode permettant de retourner la liste de tous les véhicules
      * 
+     * @param bool $sortByAsc
+     * 
      * @return array
      */
-    public static function getAllVehicles(): array|false
+    public static function getAllVehicles(bool $sortByAsc): array|false
     {
         $pdo = Database::connect();
 
@@ -347,13 +347,20 @@ class Vehicle
         $sql = 'SELECT * FROM `vehicles` 
         INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
         WHERE `deleted_at` IS NULL
-        ORDER BY `categories`.`name`;';
+        ORDER BY `categories`.`name`';
+        
+        $sqlAsc = $sql .';';
+        $sqlDesc = $sql .' DESC;';
 
         // pour pouvoir trier les catégories selon l'ordre alphabétique 
         // envoyer sur URL / marqueur subsitutive 
 
         // query : PDOStatement | false
-        $sth = $pdo->query($sql);
+        if ($sortByAsc) {
+            $sth = $pdo->query($sqlAsc);
+        } else {
+            $sth = $pdo->query($sqlDesc);
+        }
 
         $result = $sth->fetchAll(PDO::FETCH_OBJ);
 
@@ -411,10 +418,10 @@ class Vehicle
         $sth->bindValue(':brand', $this->getBrand());
         $sth->bindValue(':model', $this->getModel());
         $sth->bindValue(':registration', $this->getRegistration());
-        $sth->bindValue(':mileage', $this->getMileage(),PDO::PARAM_INT);
+        $sth->bindValue(':mileage', $this->getMileage(), PDO::PARAM_INT);
         $sth->bindValue(':picture', $this->getPicture());
-        $sth->bindValue(':id_category', $this->getId_category(),PDO::PARAM_INT);
-        $sth->bindValue(':id_vehicle', $this->getId_vehicle(),PDO::PARAM_INT);
+        $sth->bindValue(':id_category', $this->getId_category(), PDO::PARAM_INT);
+        $sth->bindValue(':id_vehicle', $this->getId_vehicle(), PDO::PARAM_INT);
 
         $result = $sth->execute();
 

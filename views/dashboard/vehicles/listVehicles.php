@@ -11,7 +11,11 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Catégorie</th>
+                        <?php if ($sortByAsc) { ?>
+                            <th scope="col"><a href="/controllers/dashboard/vehicles/listVehicles-ctrl.php?sort=false">Catégorie</a></th>
+                        <?php ;} else { ?>
+                            <th scope="col"><a href="/controllers/dashboard/vehicles/listVehicles-ctrl.php?sort=true">Catégorie</a></th>
+                        <?php ;} ?>
                         <th scope="col">Marque</th>
                         <th scope="col">Modèle</th>
                         <th scope="col">Photo</th>
