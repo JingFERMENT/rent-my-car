@@ -15,6 +15,7 @@ try {
         $error = 'Erreur, la donnée n\'a pas été modifiée.';
     }
 
+    $_SESSION['msg'] = $msg;
     header('location:/controllers/dashboard/vehicles/listVehicles-ctrl.php');
 
     die;

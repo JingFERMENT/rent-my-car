@@ -7,7 +7,11 @@ try {
 
     $title = 'Liste des véhicules'; 
     $vehicles = Vehicle::getAllVehicles();
-    
+    $msg = filter_var($_SESSION['msg'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (isset($_SESSION['msg'])) {
+        unset($_SESSION['msg']);
+    }
 
 } catch (Throwable $e) {
     // echo "Connection failed: " . $e->getMessage();
