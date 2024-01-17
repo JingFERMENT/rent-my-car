@@ -105,7 +105,7 @@ try {
                 $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
                 $pictureToSave =  $filename . '.' . $extension; // enregistrer uniquement le nom du fichier
                 // $pictureForFront = '/public/uploads/vehicles/' . $filename . '.' . $extension;
-                
+                move_uploaded_file($from, $toBack);
             } catch (\Throwable $th) {
                 $errors['photo'] = $th->getMessage();
             }
@@ -114,7 +114,7 @@ try {
         if (empty($errors)) {
             // autre méthode : 
             // $vehicle = new Vehicle($brand, $model,$registration,$mileage,$filename,$id_category);
-            move_uploaded_file($from, $toBack);
+            
             $vehicle = new Vehicle();
             $vehicle->setBrand($brand);
             $vehicle->setModel($model);

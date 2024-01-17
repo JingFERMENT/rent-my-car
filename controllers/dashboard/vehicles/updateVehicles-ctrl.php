@@ -9,7 +9,6 @@ try {
     // récupérer les catégories de toutes les véhicules
     $vehicles = Vehicle::getAllVehicles();
   
-
     // récupérer la voiture à modifier
     $id_vehicle = intval(filter_input(INPUT_GET, 'id_vehicle', FILTER_SANITIZE_NUMBER_INT));
     $theVehicle = Vehicle::get($id_vehicle);

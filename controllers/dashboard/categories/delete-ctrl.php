@@ -7,7 +7,6 @@ require_once(__DIR__ . '/../../../models/Vehicle.php');
 
 try {
 
-    $errors = [];
     // supprimer tous sauf les chiffres et + / - ;
     $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
 
