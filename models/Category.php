@@ -107,7 +107,7 @@ class Category
         // appel de la méthode static connect
         $pdo = Database::connect();
 
-        $sql = 'SELECT `name`,`id_category` FROM `categories`;';
+        $sql = 'SELECT `name`,`id_category` FROM `categories` ORDER BY `name`;';
 
         /*Sélectionner toutes les valeurs dans la table catégorie*/
         // query : préparer et executer sans marqueur substitute

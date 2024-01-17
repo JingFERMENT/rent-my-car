@@ -347,7 +347,7 @@ class Vehicle
         $sql = 'SELECT * FROM `vehicles` 
         INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
         WHERE `deleted_at` IS NULL
-        ORDER BY `categories`.`name` ';
+        ORDER BY `categories`.`name`;';
 
         // pour pouvoir trier les catégories selon l'ordre alphabétique 
         // envoyer sur URL / marqueur subsitutive 

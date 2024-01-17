@@ -1,6 +1,6 @@
 <div class="card border-2 text-center">
     <div class="p-5">
-        <h1 class="pt-5">Liste des véhicules</h1>
+        <h1>Liste des véhicules</h1>
         <span class="text-success fw-bold"><?= $msg ?? '' ?></span>
         <span class="text-danger fw-bold"><?= $error ?? '' ?></span>
         <div class="d-flex justify-content-end">

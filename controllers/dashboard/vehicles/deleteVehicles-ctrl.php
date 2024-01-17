@@ -30,11 +30,12 @@ try {
             } else {
                 $msg = 'L\'image n\'existe pas';
             }
+        // s'il n'y a pas d'image
         } else {
             $msg = 'Véhicule supprimé avec succès.';
         }
     } else {
-        $msg = 'Erreur, la donnée n\'a pas été supprimée.';
+        $msg = 'Erreur, les données n\'ont pas été supprimées.';
     }
 
     $_SESSION['msg'] = $msg;
