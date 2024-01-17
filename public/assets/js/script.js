@@ -7,6 +7,10 @@
 $('.modalOpenBtn').on("click", showConfirmationPopup);
 // cibler sur la bouton 'oui' dans la page modal
 $(".deleteBtn").on("click", triggerDelete);
+// cibler sur la bouton qui ouvre la page modal
+$('.modalOpenVehicleBtn').on("click", showConfirmationVehiclePopup);
+// cibler sur la bouton 'oui' dans la page modal
+$(".deleteVehicleBtn").on("click", triggerVehicleDelete);
 
 function showConfirmationPopup(event) {
     const clickedCategoryId = ($(this).data('category'));
@@ -20,6 +24,25 @@ function triggerDelete(event) {
     //envoyer sur URL pour récupérer ce lien dans delete-ctrl et supprimer cela dans la base des données
     window.location.href = "/controllers/dashboard/categories/delete-ctrl.php?id_category=" + categoryId;
 }
+
+function showConfirmationVehiclePopup(event) {
+    const clickedVehicleId = ($(this).data('id'));
+    // attribuer une valeur à l'attribut 'data-id'
+    $(".deleteVehicleBtn").attr('data-id', clickedVehicleId);
+}
+
+function triggerVehicleDelete(event) {
+    //cibler la data-id sur la bouton "oui" de modal
+    let vehicleId = $(this).data('id');
+    //envoyer sur URL pour récupérer ce lien dans delete-ctrl et supprimer cela dans la base des données
+    window.location.href = "/controllers/dashboard/vehicles/deleteVehicles-ctrl.php?id_vehicle=" + vehicleId;
+}
+
+
+
+
+
+
 
 // option 2: avec window message
 

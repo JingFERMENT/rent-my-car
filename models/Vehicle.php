@@ -345,7 +345,9 @@ class Vehicle
         // $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `categories`.`name`
         // ON clé primaire et clé étrangère
         $sql = 'SELECT * FROM `vehicles` 
-        INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) ORDER BY `categories`.`name`';
+        INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
+        WHERE `deleted_at` IS NULL
+        ORDER BY `categories`.`name` ';
 
         // pour pouvoir trier les catégories selon l'ordre alphabétique 
         // envoyer sur URL / marqueur subsitutive 
@@ -382,7 +384,6 @@ class Vehicle
         $result = $sth->fetch(PDO::FETCH_OBJ);
 
         return $result;
-
     }
     /**
      * 
@@ -390,36 +391,51 @@ class Vehicle
      * 
      * @return bool
      */
-    public function updateVehicles(): bool {
+    public function updateVehicles(): bool
+    {
 
         $pdo = Database::connect();
 
         $sql = 'UPDATE `vehicles`  
-        SET `vehicles`.`brand` = :brand,
-        `vehicles`.`model` = :model,
-        `vehicles`.`registration` = :registration,
-        `vehicles`.`mileage` = :mileage,
-        `vehicles`.`picture` = :picture,
-        `vehicles`.`id_category` = :id_category
+        SET `brand` = :brand,
+        `model` = :model,
+        `registration` = :registration,
+        `mileage` = :mileage,
+        `picture` = :picture,
+        `id_category` = :id_category
         WHERE 
-        `vehicles`.`id_vehicle` = :id_vehicle;';
+        `id_vehicle` = :id_vehicle;';
 
         $sth = $pdo->prepare($sql);
 
         $sth->bindValue(':brand', $this->getBrand());
         $sth->bindValue(':model', $this->getModel());
         $sth->bindValue(':registration', $this->getRegistration());
-        $sth->bindValue(':mileage', $this->getMileage());
+        $sth->bindValue(':mileage', $this->getMileage(),PDO::PARAM_INT);
         $sth->bindValue(':picture', $this->getPicture());
-        $sth->bindValue(':id_category', $this->getId_category());
-        $sth->bindValue(':id_vehicle', $this->getId_vehicle());
+        $sth->bindValue(':id_category', $this->getId_category(),PDO::PARAM_INT);
+        $sth->bindValue(':id_vehicle', $this->getId_vehicle(),PDO::PARAM_INT);
 
         $result = $sth->execute();
 
         return $result;
-
-        }
-
+    }
 
 
+    public static function archive(int $id_vehicle): bool
+    {
+        $pdo = Database::connect();
+
+        $sql = 'UPDATE `vehicles`
+        SET `deleted_at` = NOW()
+        WHERE `id_vehicle` =:id_vehicle;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':id_vehicle', $id_vehicle, PDO::PARAM_INT);
+
+        $result = $sth->execute();
+
+        return $result;
+    }
 }

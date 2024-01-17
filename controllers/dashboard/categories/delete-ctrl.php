@@ -2,8 +2,6 @@
 // objectif de session pour utiliser partout, notamment sur la page liste
 // une session dure 20 minutes
 session_start();
-
-require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 require_once(__DIR__ . '/../../../models/Vehicle.php');
 
@@ -25,7 +23,7 @@ try {
         if ($isDeleted) {
             $msg = 'Catégorie supprimée avec succès.';
         } else {
-            $error = 'Erreur, la donnée n\'a pas été insérée.';
+            $error = 'Erreur, la donnée n\'a pas été modifiée.';
         }
     }
     
@@ -40,9 +38,3 @@ try {
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
-
-// views 
-include __DIR__ . '/../../../views/templates/header_dashboard.php';
-include __DIR__ . '/../../../views/dashboard/categories/list.php';
-include __DIR__ . '/../../../views/templates/footer_dashboard.php';
