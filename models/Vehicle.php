@@ -256,7 +256,7 @@ class Vehicle
     // créer un objet donc une méthode non-static
     /**
      * 
-     * Méthode permettant d'effectuer l'ajout d'un véhicule en base de données
+     * Méthode permettant d'effectuer l'ajout d'un véhicule dans la base de données
      * 
      * @return bool
      */
@@ -284,7 +284,7 @@ class Vehicle
 
         // executer les requêtes 
         // méthode execute qui appartient à la PDO Statement
-        // pour savoir la requête est bien executé (pas p)
+        // pour savoir la requête est bien executé 
         // PDOStatement::rowCount — Retourne le nombre de lignes affectées par le dernier appel à la fonction PDOStatement::execute()
 
 
@@ -306,7 +306,7 @@ class Vehicle
 
     /**
      * 
-     * Méthode permettant de retourner les véhicules concernés d'une id_category
+     * Méthode permettant de retourner les véhicules concernés d'un id_category
      * 
      * @param int $id_category
      * 
@@ -333,7 +333,7 @@ class Vehicle
 
     /**
      * 
-     * Méthode permettant de retourner la liste des véhicules
+     * Méthode permettant de retourner la liste de tous les véhicules
      * 
      * @return array
      */
@@ -358,6 +358,14 @@ class Vehicle
         return $result;
     }
 
+    /**
+     * 
+     * Methode statique permettant de retourner un véhicule avec l'id_vehcile demandé
+     * 
+     * @param int $id_vehicle
+     * 
+     * @return object
+     */
     public static function get(int $id_vehicle): object|false
     {
         // appel de la méthode static connect

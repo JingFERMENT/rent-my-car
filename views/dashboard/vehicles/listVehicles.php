@@ -25,20 +25,21 @@
 
                     foreach ($vehicles as $vehicle) { ?>
 
-                        <tr >
+                        <tr>
                             <th scope="row" class="fw-normal"><?= $vehicle->name ?></th>
                             <td><?= $vehicle->brand ?></td>
                             <td><?= $vehicle->model ?></td>
                             <td>
                                 <?php
-                                if($vehicle->picture !== NULL) {
-                                    echo "<img class=\"img-fluid vehcilePicture\" src=\"/public/uploads/vehicles/$vehicle->picture\"/>";
-                                }
+                                if ($vehicle->picture !== NULL) { ?>
+                                    <img class="img-fluid vehcilePicture" src="/public/uploads/vehicles/<?= $vehicle->picture ?>" />
+                                <?php }
                                 ?>
                             </td>
                             <!-- <td><?= (new DateTime($vehicle->created_at))->format('d-m-Y') ?></td> -->
                             <td>
-                                <a class="text-dark" href="/controllers/dashboard/vehicles/updateVehicles-ctrl.php?id_vehicle=<?= $vehicle->id_vehicle ?>"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                                <a class="text-dark" href="/controllers/dashboard/vehicles/updateVehicles-ctrl.php?id_vehicle=<?= $vehicle->id_vehicle ?>"><i class="fa-solid fa-pen-to-square"></i></a>
+                            </td>
                             <!-- Button trigger modal -->
                             <td><a type="button" data-category="" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-dark modalOpenBtn"><i class="fa-solid fa-trash-can"></i></a></td>
                         </tr>
