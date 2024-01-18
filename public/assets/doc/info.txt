@@ -1,0 +1,4 @@
+Pour aller chercher la contrainte de clé étrangère: 
+il faudrait aller sur la base SQL et voir la vue relationnelle
+ON deleted
+ON updated 

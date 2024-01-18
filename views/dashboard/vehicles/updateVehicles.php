@@ -2,6 +2,7 @@
     <div class="py-5 d-flex flex-column justify-content-center align-items-center">
         <h1 class="text-center pb-3">Modifier un véhicule</h1>
         <span class="text-success fw-bold"><?= $msg ?? '' ?></span>
+        <span class="text-danger fw-bold"><?= $errors['isExist'] ?? '' ?></span>
         <form class="col-12 col-lg-6" method="POST" enctype='multipart/form-data' novalidate>
             <div class="d-flex flex-wrap">
                 <!-- categorie -->
@@ -10,9 +11,9 @@
                             *<span></label>
                     <select name="id_category" class="form-select" aria-label="Default select example">
                         <option selected disabled>--Sélectionnez votre catégorie--</option>
-                        <?php foreach ($vehicles as $vehicle) {
-                            $isSelected = ($vehicle->id_category == $theVehicle->id_category) ? "selected" : '';
-                            echo "<option value=\"$vehicle->id_category\" $isSelected>$vehicle->name</option>";
+                        <?php foreach ($categories as $category) {
+                            $isSelected = ($category->id_category == $theVehicle->id_category) ? "selected" : '';
+                            echo "<option value=\"$category->id_category\" $isSelected>$category->name</option>";
                         } ?>
                     </select>
                     <span class="text-danger"><?= $errors['name'] ?? '' ?></span>

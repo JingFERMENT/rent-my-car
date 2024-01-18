@@ -7,7 +7,7 @@ try {
 
     $title = "Modifier un véhicule";
     // récupérer les véhicules
-    $vehicles = Vehicle::getAllVehicles(true);
+    $categories = Category::getAll(true);
   
     // récupérer la voiture à modifier
     $id_vehicle = intval(filter_input(INPUT_GET, 'id_vehicle', FILTER_SANITIZE_NUMBER_INT));
@@ -27,7 +27,7 @@ try {
          if (empty($id_category)) { // pour les champs obligatoires
              $errors['id_category'] = 'La catégorie est obligatoire.';
          } else { // validation des données
-             $ID = array_column($vehicles, 'id_category');
+             $ID = array_column($categories, 'id_category');
              // comparer les deux tableaux avec les valeurs 
              $isOk = in_array($id_category, $ID);
              if (!$isOk) {
@@ -90,11 +90,15 @@ try {
             }
         }
 
-        $pictureToSave = null;
+        $pictureToSave = $theVehicle->picture;
+       
         // FILE: 
-        if ($_FILES['picture']['error'] != 4) {
+        // if ($_FILES['picture']['error'] != 4) {
+        if (!empty($_FILES['picture']['name'])) {
             try {
-
+                // @ signfie que si la suppression du fichier échoue pour une raison quelconque, comme si le fichier n'existe pas, le script continuera à s'exécuter sans générer de message d'erreur
+               @unlink(__DIR__. '/../../../public/uploads/vehicles/' .$pictureToSave); // supprimer l'image si on change de l'image
+                
                 if ($_FILES['picture']['error'] != 0) {
                     throw new Exception("Une erreur s'est produite.");
                 }
@@ -110,9 +114,9 @@ try {
 
                 // une chaine de caractère unique 
                 $filename = uniqid('img_');
-                $extension = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION);
+                $extension = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION); // récupérer les extensions
                 // le fichier venait de dossier tmp_name
-                $from = $_FILES['picture']['tmp_name'];
+                $from = $_FILES['picture']['tmp_name']; 
 
                 $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
                 $pictureToSave =  $filename . '.' . $extension; // enregistrer uniquement le nom du fichier
@@ -120,6 +124,13 @@ try {
             } catch (\Throwable $th) {
                 $errors['photo'] = $th->getMessage();
             }
+        }
+
+        
+        $isExist = Vehicle::isExist($registration);
+        // si la plaque existe déjà en base ou c'est pareil que celui rentré par l'utilisateur
+        if($isExist && $registration != $theVehicle->registration) {
+            $errors['isExist'] = 'La plaque d\'immatriculation existe déjà.';
         }
 
         if (empty($errors)) {

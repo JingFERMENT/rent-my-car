@@ -428,6 +428,25 @@ class Vehicle
         return $result;
     }
 
+    public static function isExist(string $registration): bool
+    {
+        $pdo = Database::connect();
+
+        $sql = 'SELECT COUNT(`id_vehicle`) AS "count"
+        FROM `vehicles`
+        WHERE `registration` = :registration;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':registration', $registration);
+
+        $result = $sth->execute(); // retourner true ou false sur la bonne execution de la requête
+
+        $result = $sth->fetchColumn(); // on récupère la valeur retourner par le count (si c'est 0 c'est false)
+
+        return (bool) $result > 0; // retourner true si c'est supérieur à 0;
+    }
+
 
     public static function archive(int $id_vehicle): bool
     {
