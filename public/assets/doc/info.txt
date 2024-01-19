@@ -2,3 +2,12 @@ Pour aller chercher la contrainte de clé étrangère:
 il faudrait aller sur la base SQL et voir la vue relationnelle
 ON deleted
 ON updated 
+
+
+SELECT `categories`.`name` AS 'category_name', COUNT(`Vehicles`.`id_vehicle`) AS 'nb_vehicles'
+FROM `Categories`
+LEFT JOIN `Vehicles` ON `categories`.`id_category` = `vehicles`.`id_category`
+GROUP BY `categories`.`name`
+HAVING (`nb_vehicles`>2);
+
+HAVING utilisera dans la fonction "agrégation" (MIN, MAX, COUNT, SUM, AVG) 

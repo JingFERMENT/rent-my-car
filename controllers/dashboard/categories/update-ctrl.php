@@ -34,7 +34,7 @@ try {
 
         // vérifier s'il y a des doublons de catégorie
         $isExistDuplicate = Category::isExist($name);
-        if ($isExistDuplicate && $name != $category->getName()) {
+        if ($isExistDuplicate && $name != $category->name) {
             $errors['name'] = 'Cette catégorie existe déjà.';
         }
 
@@ -46,7 +46,7 @@ try {
             $category = new Category();
 
             $category->setName($name);
-            $category->setIdCategory($idCategory);
+            $category->setIdCategory($id_category);
 
             $updateCategoryResult = $category->update();
             if ($updateCategoryResult) {

@@ -13,7 +13,7 @@
   <!-- font awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- my css file -->
-  <link rel="stylesheet" href="/public/assets/css/style.css">
+  <link rel="stylesheet" href="/public/assets/css/dashboard.css">
   <!-- google font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,6 +46,9 @@
           <a href="#"><i class="fa-solid fa-calendar-days"></i>Réservation</a>
         </li>
       </ul>
+      <div class="text-center">
+      <a href="/controllers/vehicles_list_ctrl.php"class="btn text-white fw-bold px-4 text-uppercase" id="btnQuit">Quitter</a>
+      </div>
     </div>
     <div id="page-content-wrapper" class="mx-auto">
 

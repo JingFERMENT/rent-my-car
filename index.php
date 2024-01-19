@@ -1,3 +1,3 @@
 <?php
-    header('location: /controllers/dashboard/vehicles/listVehicles-ctrl.php');
+    header('location: /controllers/vehicles_list_ctrl.php');
     die;

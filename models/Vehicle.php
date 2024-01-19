@@ -327,7 +327,6 @@ class Vehicle
         return $result > 0;
     }
 
-
     
     /**
      * 
@@ -465,3 +464,7 @@ class Vehicle
         return $result;
     }
 }
+
+// archived at 
+// delete_at 
+// reactive_at 
