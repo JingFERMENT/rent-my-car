@@ -10,9 +10,9 @@ try {
     // supprimer tous sauf les chiffres et + / - ;
     $idCategory = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
 
+    // vérifier s'il y a des véhicules qui ont déjà une catégorie.
     $isExisitInVehicles = Vehicle::getVehiclesFromIdCategory($idCategory);
     
-
     // vérifier s'il y a des véhicules qui sont liés à une categorie avant la suppression
     if ($isExisitInVehicles) {
         $error = 'Vous ne pouvez pas supprimer cette categorie, car elle a des véhicules qui y sont rattachés.';
@@ -35,5 +35,10 @@ try {
 
     die;
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    // echo "Connection failed: " . $e->getMessage();
+    $error = $th->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer.php';
+    die;
 }

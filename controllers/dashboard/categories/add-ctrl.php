@@ -1,22 +1,14 @@
 <?php
-session_start();
-require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 
-
-// connexion de la base des données  
-// $dsn : data server name 
-// host: hébergeur 
-
-// mettre de manière globale
 try {
     $title = 'Ajouter une catégorie';
 
-    // si le formulaire est envoyé
+    // Si les données du formulaire ont été transmises
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $errors = [];
-        // nettoyage des données "ajout du nom de catégorie"
+        // Récupération, nettoyage et validation des données 
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if (empty($name)) { // le champs est obligatoire
@@ -37,24 +29,35 @@ try {
 
         // colate SQL: majuscule sensibilité
 
-        // si tout est OK 
+        // si tout est OK, enregistrement en base de données
         if (empty($errors)) {
-            // objet prêt à être inséré dans la base 
-            $category = new Category();
-            // objet hydraté
-            $category->setName($name);
 
-            $insertResult = $category->insert();
+             // Création d'un nouvel objet issu de la classe 'category'
+            $categoryObj = new Category();
+
+            // Hydratation de notre objet
+            $categoryObj->setName($name);
+
+            // Appel de la méthode insert
+            $insertResult = $categoryObj->insert();
+
+            // Si la méthode a retourné "true", on redirige vers la liste
             if ($insertResult) {
-                $msg = 'La catégorie a bien été prise en compte.';
-                // header('location: /controllers/dashboard/categories/list-ctrl.php');
+                $msg = 'La catégorie a bien été inséré. Vous pouvez en saisir une autre.';
+                header("Refresh: 1; url=/controllers/dashboard/categories/list-ctrl.php");
+                die;
             } else {
-                $msg = 'Erreur, la donnée n\'a pas été insérée.';
+                $msg = 'Erreur, la donnée n\'a pas été insérée. Veuillez réessayer.';
             }
         }
     }
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    //inclure une view pour trainter les messages d'erreur
+    $error = $th->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header_dashboard.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer_dashboard.php';
+    die;
 }
 
 

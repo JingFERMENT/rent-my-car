@@ -20,8 +20,13 @@ try {
     }
     
 } catch (Throwable $e) {
+    $error = $th->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer.php';
+    die;
     // echo "Connection failed: " . $e->getMessage();
-    var_dump($e);
+    // var_dump($e);
 }
 
 // views

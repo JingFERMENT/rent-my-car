@@ -8,7 +8,8 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
     $title = 'Modifier une catégorie';
 
-    // attention c'est en GET pour récupérer les données 
+    // attention c'est en GET 
+    // Récupération du paramètre d'URL correspondant à l'id de la catégorie cliquée
     $id_category = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
     $categorytoDisplay = Category::get($id_category);
     
@@ -17,9 +18,10 @@ try {
         die;
     }
 
+    // Si les données du formulaire ont été transmises
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
-        // nettoyage des données "modifier du nom de catégorie"
+        // Récupération, nettoyage et validation des données
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
 
         if (empty($name)) { // le champs est obligatoire
@@ -36,32 +38,40 @@ try {
         $isExistDuplicate = Category::isExist($name);
         if ($isExistDuplicate && $name != $categorytoDisplay->name) {
             $errors['name'] = 'Cette catégorie existe déjà.';
-        }
+        }        
 
-        // vérifier s'il y a des véhicules qui sont liés à une categorie 
-        
-
-        // si tout est OK 
+        // si tout est OK, enregistrement en base de données
         if (empty($errors)) {
+            // Création d'un nouvel objet issu de la classe 'Type'
             $categoryToSave = new Category();
 
+            // Hydratation de notre objet
             $categoryToSave->setName($name);
             $categoryToSave->setIdCategory($id_category);
 
+             // Appel de la méthode update
             $updateCategoryResult = $categoryToSave->update();
+
+            // Si la méthode a retourné "true"
             if ($updateCategoryResult) {
-                $msg = 'La donnée a bien été modifiée.';
+                $msg = 'Catégorie modifiée avec succés.';
                 // header('location: /controllers/dashboard/categories/list-ctrl.php');
             } else {
-                $msg = 'Erreur, la donnée n\'a pas été modifiée.';
+                $msg = 'Erreur, la catégorie n\'a pas été modifiée.';
             }
 
+            // Récupération de la catégorie selon son id
             $categorytoDisplay = Category::get($id_category);
 
         }
     }
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    // echo "Connection failed: " . $e->getMessage();
+    $error = $th->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header_dashboard.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer_dashboard.php';
+    die;
 }
 // views 
 include __DIR__ . '/../../../views/templates/header_dashboard.php';

@@ -1,6 +1,4 @@
 <?php
-
-require_once(__DIR__ . '/../config/init.php');
 require_once(__DIR__ . '/../helpers/Database.php');
 
 class Category
@@ -10,7 +8,7 @@ class Category
     // Créer autant des attributs que dans les colonnes de l'entité de MCD
     private ?int $id_category;
     private string $name;
-    
+
 
     /**
      * Méthode magique appelée automatiquement lors de l'instanciation de la classe 'Category'
@@ -75,30 +73,43 @@ class Category
     // création des méthodes persos
     /**
      * 
-     * Méthode permettant d'effectuer l'ajout d'une catégorie en base de données
+     * Méthode permettant l'enregistrement d'une nouvelle catégorie
      * 
-     * @return bool
+     * @return bool True en cas de succès, sinon une erreur de type Exception est générée
      */
-    public function insert():bool
+    public function insert(): bool
     {
+        // Création d'une variable recevant un objet issu de la classe PDO 
         $pdo = Database::connect();
 
+        // Requête contenant un marqueur nominatif
         $sql = 'INSERT INTO `categories`(`name`) VALUES (:name);';
 
-        // préparer pour la sécurité de l'injection de SQL
+        // Si marqueur nominatif, il faut préparer la requête 
+        // pour la sécurité des requêtes de SQL (ne pas avoir de l'injection)
         $sth = $pdo->prepare($sql);
 
-        // méthode permttant de définir un marqueur et une valeur // appartenir à PDO Statement 
+        // méthode permttant de définir un marqueur et une valeur qui appartient à PDO Statement 
+        // Affectation de la valeur correspondant au marqueur nominatif concerné
         $sth->bindValue(':name', $this->getName());
 
-        $sthResult = $sth->execute();
+        // Exécution de la requête
+        $sth->execute();
 
-        return $sthResult;
+        // Appel à la méthode rowCount permettant de savoir combien d'enregistrements ont été affectés
+        // par la dernière requête (fonctionnel uniquement sur insert, update, ou delete. PAS SUR SELECT!!)
+        if ($sth->rowCount() <= 0) {
+            // Génération d'une exception renvoyant le message en paramètre au catch créé en amont et arrêt du traitement.
+            throw new Exception('Erreur lors de l\'enregistrement de la catégorie');
+        } else {
+            // Retourne true dans le cas contraire (tout s'est bien passé)
+            return true;
+        }
     }
 
     /**
      * 
-     * Méthode permettant de retourner toutes les données de la base
+     * Méthode permettant de récupérer la liste des catégories sous forme de tableau d'objets
      * 
      * @return array
      */
@@ -110,17 +121,19 @@ class Category
         $sql = 'SELECT `name`,`id_category` FROM `categories` ORDER BY `name`;';
 
         /*Sélectionner toutes les valeurs dans la table catégorie*/
+        // $sql = 'SELECT * FROM `categories` ORDER BY `name`;';
+
         // query : préparer et executer sans marqueur substitute
         $sth = $pdo->query($sql);
 
-        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+        $data = $sth->fetchAll(PDO::FETCH_OBJ);
 
-        return $result;
+        return $data;
     }
 
     /**
      * 
-     * Méthode permettant de retourner les valeurs concernées d'une id_category
+     * Méthode permettant  de récupérer un objet standard avec pour propriétés, les colonnes sélectionnées
      * 
      * @param int $id_category
      * 
@@ -133,43 +146,92 @@ class Category
 
         $sql = 'SELECT * FROM `categories` WHERE `id_category` =:id_category;';
 
+        // Si marqueur nominatif, il faut préparer la requête
         $sth = $pdo->prepare($sql);
 
+        // Affectation de la valeur correspondant au marqueur nominatif concerné
         $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+
+        // Exécution de la requête
+        $sth->execute();
+
+        $data = $sth->fetch(PDO::FETCH_OBJ);
+
+        // On teste si data est vide.
+        if (!$data) {
+            // Génération d'une exception renvoyant le message en paramètre au catch créé en amont et arrêt du traitement.
+            throw new Exception('Erreur lors de la récupération de catégorie.');
+        } else {
+            // Retourne la data dans le cas contraire (tout s'est bien passé)
+            return $data;
+        }
+    }
+
+    /**
+     * Méthode permettant de savoir si une catégorie existe déjà
+     * 
+     * @param mixed $name
+     * 
+     * @return bool
+     */
+    public static function isExist(string $name): bool
+    {
+        $pdo = Database::connect();
+
+        // SHOW COLLATION WHERE COLLATION LIKE  "%_cs"
+        // COUNT(*): combien il y a d'enregistrement dans la base
+        // laisser COUNT(*) peut avoir des problèmes quand on y accède (ex:objet->COUNT(*))
+        // donc il faudrait nommer la colonne comme nbcolumn
+        $sql = 'SELECT COUNT(*) AS `nbcolumn` FROM `categories` WHERE `name` = :name;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':name', $name);
 
         $sth->execute();
 
-        $result = $sth->fetch(PDO::FETCH_OBJ);
+        // fetchAll     => renvoyer toutes les lignes sous forme de tableau associatif
+        // fetch        => récupérer une ligne à la fois
+        // fetchColumn  => récupérer la valeur de la première colonne de chaque ligne.
+        $result = $sth->fetchColumn();
 
-        // $category = new Category($result->name, $result->id_category);
+        // if ($result !== false) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
 
-        return $result;
+        // Si le nombre de lignes correspondantes est supérieur à zéro, la valeur existe
+        return $result > 0;
     }
 
     /**
      * 
-     * Méthode permettant de mettre à jour les valeurs dans la table catégorie
-     *  
-     * @param mixed $id_category
-     * @param mixed $name
+     * Méthode permettant de l'enregistrement la mise à jour d'une catégorie
      * 
-     * @return [type]
+     * @return bool
      */
     public function update(): bool
     {
-
+        // Création d'une variable recevant un objet issu de la classe PDO 
         $pdo = Database::connect();
 
+        // Requête contenant un marqueur nominatif
         $sql = 'UPDATE `categories` SET `name` =:name WHERE `id_category` =:id_category;';
 
+        // Si marqueur nominatif, il faut préparer la requête
         $sth = $pdo->prepare($sql);
 
+        // Affectation de la valeur correspondant au marqueur nominatif concerné
         $sth->bindValue(':name', $this->getName());
         $sth->bindValue(':id_category', $this->getIdCategory(), PDO::PARAM_INT);
 
-        $result = $sth->execute();
-
-        return $result;
+        if (!$sth->execute()) {
+            throw new Exception('Erreur lors de la mise à jour de la catégorie.');
+        } else {
+            // Retourne true dans le cas contraire (tout s'est bien passé)
+            return true;
+        }
     }
 
     /**
@@ -187,59 +249,21 @@ class Category
         $pdo = Database::connect();
 
         // marqueur nominatif 
-        $sql = 'DELETE FROM `categories` WHERE id_category =:id_category';
+        $sql = 'DELETE FROM `categories` WHERE `id_category` = :id_category;';
 
-         // solution 1: marqueur nominatif prepare + bindValue + execute / solution 2: sans marquereur utiliser query
+        // solution 1: marqueur nominatif prepare + bindValue + execute / solution 2: sans marquereur utiliser query
         $sth = $pdo->prepare($sql);
-        
+
         // entier pour id_category
         // PDO::PARAM_INT: ne mets pas les "" entre les valeurs 
-        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT );
-
-        $result = $sth->execute();
-
-        return $result;
-    }
-
-    
-    /**
-     * Méthode permettant de vérifier s'il y a un doublon dans les noms de catégories 
-     * 
-     * @param mixed $name
-     * 
-     * @return bool
-     */
-    public static function isExist(string $name):bool
-    {
-        $pdo = Database::connect();
-
-        $sql = 'SELECT * FROM `categories` WHERE `name` =:name;';
-        // SHOW COLLATION WHERE COLLATION LIKE  "%_cs"
-        // COUNT(*): combien il y a d'enregistrement dans la base
-        // laisser COUNT(*) peut avoir des problèmes quand on y accède (ex:objet->COUNT(*))
-        $sql = 'SELECT COUNT(*) AS `nbcolumn` FROM `categories` WHERE `name` =:name;';
-        
-        $sth = $pdo->prepare($sql);
-
-        $sth->bindValue(':name', $name);
+        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
 
         $sth->execute();
 
-        // premier résultat recherché 
-        // retourner un objet anonyme / un seul 
-        // fetchColumn: chercher directement la valeur de cette colonne 
-        // rowCount: update / delete / create however NOT FOR SELECT
-        // $result = $sth->fetch(PDO::FETCH_OBJ);
-
-
-        $result = $sth->fetchColumn();
-        // if ($result !== false) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-
-        // return $result;
-        return $result > 0;
+        if(!$sth->rowCount()<= 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
