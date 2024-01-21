@@ -18,7 +18,7 @@
                         <?php ;} ?>
                         <th scope="col">Marque</th>
                         <th scope="col">Modèle</th>
-                        <th scope="col">Photo</th>
+                        <th scope="col">Image</th>
                         <!-- <th scope="col">Créé le</th> -->
                         <th scope="col">Modifier</th>
                         <th scope="col">Supprimer</th>

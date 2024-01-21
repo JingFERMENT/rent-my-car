@@ -4,12 +4,12 @@
     <?php foreach ($vehicles as $vehicle) { ?>
         <div class="card p-0">
             <img src="/public/uploads/vehicles/<?= $vehicle->picture ?>" class="card-img-top" alt="...">
-            <div class="card-img-overlay px-0 text-end">
-                <span class="badge text-bg-warning rounded-0 px-3"><?= $vehicle->name ?></span>
+            <div class="card-img-overlay p-0 text-end">
+                <span class="badge text-bg-warning rounded-0"><?= $vehicle->name ?></span>
             </div>
             <div class="card-body text-center">
-                <h5 class="card-title"><?= $vehicle->brand ?><?= ' ' . $vehicle->model ?></h5>
-                <p class="card-text"><?= $vehicle->mileage ?></p>
+                <h5 class="card-title"><?= $vehicle->brand ?></h5>
+                <p class="card-text fst-italic"><?= $vehicle->model ?></p>
                 <a href="#" class="btn btn-dark">Réserver</a>
             </div>
 

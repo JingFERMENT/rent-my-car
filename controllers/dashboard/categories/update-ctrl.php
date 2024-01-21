@@ -10,9 +10,9 @@ try {
 
     // attention c'est en GET pour récupérer les données 
     $id_category = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
-    $category = Category::get($id_category);
+    $categorytoDisplay = Category::get($id_category);
     
-    if (!$category) {
+    if (!$categorytoDisplay) {
         header('location: /controllers/dashboard/categories/list-ctrl.php');
         die;
     }
@@ -34,7 +34,7 @@ try {
 
         // vérifier s'il y a des doublons de catégorie
         $isExistDuplicate = Category::isExist($name);
-        if ($isExistDuplicate && $name != $category->name) {
+        if ($isExistDuplicate && $name != $categorytoDisplay->name) {
             $errors['name'] = 'Cette catégorie existe déjà.';
         }
 
@@ -43,24 +43,26 @@ try {
 
         // si tout est OK 
         if (empty($errors)) {
-            $category = new Category();
+            $categoryToSave = new Category();
 
-            $category->setName($name);
-            $category->setIdCategory($id_category);
+            $categoryToSave->setName($name);
+            $categoryToSave->setIdCategory($id_category);
 
-            $updateCategoryResult = $category->update();
+            $updateCategoryResult = $categoryToSave->update();
             if ($updateCategoryResult) {
                 $msg = 'La donnée a bien été modifiée.';
                 // header('location: /controllers/dashboard/categories/list-ctrl.php');
             } else {
                 $msg = 'Erreur, la donnée n\'a pas été modifiée.';
             }
+
+            $categorytoDisplay = Category::get($id_category);
+
         }
     }
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
 // views 
 include __DIR__ . '/../../../views/templates/header_dashboard.php';
 include __DIR__ . '/../../../views/dashboard/categories/update.php';
