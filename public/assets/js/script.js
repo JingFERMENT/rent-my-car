@@ -9,7 +9,9 @@ $('.modalOpenBtn').on("click", showConfirmationPopup);
 $(".deleteBtn").on("click", triggerDelete);
 // cibler sur la bouton qui ouvre la page modal
 $('.modalOpenVehicleBtn').on("click", showConfirmationVehiclePopup);
+$('.modalOpenVehicleBtn2').on("click", showConfirmationVehiclePopup2);
 // cibler sur la bouton 'oui' dans la page modal
+$(".archiveVehicleBtn").on("click", triggerVehicleArchive);
 $(".deleteVehicleBtn").on("click", triggerVehicleDelete);
 
 function showConfirmationPopup(event) {
@@ -26,6 +28,19 @@ function triggerDelete(event) {
 }
 
 function showConfirmationVehiclePopup(event) {
+    const clickedVehicleId = ($(this).data('id'));
+    // attribuer une valeur à l'attribut 'data-id'
+    $(".archiveVehicleBtn").attr('data-id', clickedVehicleId);
+}
+
+function triggerVehicleArchive(event) {
+    //cibler la data-id sur la bouton "oui" de modal
+    let vehicleId = $(this).data('id');
+    //envoyer sur URL pour récupérer ce lien dans delete-ctrl et supprimer cela dans la base des données
+    window.location.href = "/controllers/dashboard/vehicles/archiveVehicles-ctrl.php?id_vehicle=" + vehicleId;
+}
+
+function showConfirmationVehiclePopup2(event) {
     const clickedVehicleId = ($(this).data('id'));
     // attribuer une valeur à l'attribut 'data-id'
     $(".deleteVehicleBtn").attr('data-id', clickedVehicleId);

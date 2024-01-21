@@ -10,10 +10,11 @@ try {
     // Récupération des informations du véhicule
     $vehicle = Vehicle::get($idVehicle);
 
-    // Archivage du véhicule
-    $isArchived = Vehicle::archive($idVehicle);
+    // suppression du véhicule
+    $isDeleted = Vehicle::delete($idVehicle);
 
-    if ($isArchived) {
+
+    if ($isDeleted) {
         // Assurer le bon chemin du fichier en ajoutant $_SERVER['DOCUMENT_ROOT']
         if ($vehicle->picture !== NULL) {
 
@@ -40,9 +41,13 @@ try {
 
     $_SESSION['msg'] = $msg;
 
-    header('location:/controllers/dashboard/vehicles/listVehicles-ctrl.php');
+    header('location:/controllers/dashboard/vehicles/archiveVehicles-ctrl.php');
 
     die;
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    $error = $th->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header_dashboard.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer_dashboard.php';
+    die;
 }

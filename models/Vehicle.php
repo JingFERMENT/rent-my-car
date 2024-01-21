@@ -327,7 +327,7 @@ class Vehicle
         return $result > 0;
     }
 
-    
+
     /**
      * 
      * Méthode permettant de retourner la liste de tous les véhicules
@@ -347,9 +347,9 @@ class Vehicle
         INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
         WHERE `deleted_at` IS NULL
         ORDER BY `categories`.`name`';
-        
-        $sqlAsc = $sql .';';
-        $sqlDesc = $sql .' DESC;';
+
+        $sqlAsc = $sql . ';';
+        $sqlDesc = $sql . ' DESC;';
 
         // pour pouvoir trier les catégories selon l'ordre alphabétique 
         // envoyer sur URL / marqueur subsitutive 
@@ -427,6 +427,13 @@ class Vehicle
         return $result;
     }
 
+    /**
+     * 
+     * Méthode permettant de vérifier si la plaque d'immatriculation existe déjà
+     * @param string $registration
+     * 
+     * @return bool
+     */
     public static function isExist(string $registration): bool
     {
         $pdo = Database::connect();
@@ -446,7 +453,52 @@ class Vehicle
         return (bool) $result > 0; // retourner true si c'est supérieur à 0;
     }
 
+    /**
+     * 
+     * Méthode permettant de retourner la liste de tous les véhicules
+     * 
+     * @param bool $sortByAsc
+     * 
+     * @return array
+     */
+    public static function getAllArchivedVehicles(bool $sortByAsc): array|false
+    {
+        $pdo = Database::connect();
 
+        // attention sur JOIN
+        // $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `categories`.`name`
+        // ON clé primaire et clé étrangère
+        $sql = 'SELECT * FROM `vehicles` 
+        INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
+        WHERE `deleted_at` IS NOT NULL
+        ORDER BY `categories`.`name`';
+
+        $sqlAsc = $sql . ';';
+        $sqlDesc = $sql . ' DESC;';
+
+        // pour pouvoir trier les catégories selon l'ordre alphabétique 
+        // envoyer sur URL / marqueur subsitutive 
+
+        // query : PDOStatement | false
+        if ($sortByAsc) {
+            $sth = $pdo->query($sqlAsc);
+        } else {
+            $sth = $pdo->query($sqlDesc);
+        }
+
+        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+
+        return $result;
+    }
+
+    /**
+     * 
+     * Méthode permettant d'archiver le véhicule concerné
+     * 
+     * @param int $id_vehicle
+     * 
+     * @return bool
+     */
     public static function archive(int $id_vehicle): bool
     {
         $pdo = Database::connect();
@@ -463,8 +515,60 @@ class Vehicle
 
         return $result;
     }
-}
 
-// archived at 
-// delete_at 
-// reactive_at 
+    /**
+     * 
+     * Méthode permettant de supprimer le véhicule concerné
+     * 
+     * @param int $id_vehicle
+     * 
+     * @return bool
+     */
+    public static function delete(int $id_vehicle): bool
+    {
+        $pdo = Database::connect();
+
+        $sql = 'DELETE FROM `vehicles`
+        WHERE `id_vehicle` =:id_vehicle;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':id_vehicle', $id_vehicle, PDO::PARAM_INT);
+
+        $sth->execute();
+
+        if (!$sth->rowCount() <= 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * Méthode permettant de réactiver un véhicule concerné
+     * 
+     * @param int $id_category
+     * 
+     * @return bool
+     */
+    public static function reactivate(int $id_vehicle): bool
+    {
+        $pdo = Database::connect();
+
+        $sql = 'UPDATE `vehicles` SET `deleted_at` = NULL WHERE `id_vehicle` = :id_vehicle ;';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':id_vehicle', $id_vehicle, PDO::PARAM_INT);
+
+        $sth->execute();
+
+        if (!$sth->execute()) {
+            throw new Exception('Erreur lors de la réactivation du véhicule.');
+        } else {
+            // Retourne true dans le cas contraire (tout s'est bien passé)
+            return true;
+        }
+    }
+}
