@@ -13,7 +13,7 @@ try {
     }
     // equivalent à $sortByAsc = ($_GET['sort'] == 'true');
 
-    $vehicles = Vehicle::getAllVehicles($sortByAsc, $archived);
+    $vehicles = Vehicle::getAllVehicles($sortByAsc, 0, 1000,$archived);
 
     $msg = filter_var($_SESSION['msg'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 

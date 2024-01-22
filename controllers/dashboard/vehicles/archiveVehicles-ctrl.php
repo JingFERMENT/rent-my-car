@@ -24,7 +24,7 @@ try {
         $sortByAsc = false;
     }
 
-    $vehicles = Vehicle::getAllVehicles($sortByAsc, $archived);
+    $vehicles = Vehicle::getAllVehicles($sortByAsc, 0, 1000, $archived);
 
     $msg = filter_var($_SESSION['msg'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -34,11 +34,7 @@ try {
 
     
 } catch (Throwable $e) {
-    $error = $th->getMessage();
-    include __DIR__ . '/../../../views/dashboard/templates/header_dashboard.php';
-    include __DIR__ . '/../../../views/dashboard/templates/error.php';
-    include __DIR__ . '/../../../views/dashboard/templates/footer_dashboard.php';
-    die;
+    echo "Connection failed: " . $e->getMessage();
 }
 
 // views

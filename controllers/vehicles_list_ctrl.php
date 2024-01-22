@@ -12,8 +12,22 @@ try {
     }
     // equivalent à $sortByAsc = ($_GET['sort'] == 'true');
 
-    $vehicles = Vehicle::getAllVehicles($sortByAsc);
- 
+    if (isset($_GET['page'])) {
+        $page = (int)$_GET['page'];
+    } else {
+        $page = 1;
+    }
+
+    $offset = 10 * ($page - 1);
+    $vehicles = Vehicle::pagination($offset);
+
+    $allPages = Vehicle::nbOfAllVehicles();
+    
+
+    $nbOfPages = ceil($allPages / 10);
+    
+    
+
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();
 }
