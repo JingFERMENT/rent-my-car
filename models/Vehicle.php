@@ -336,17 +336,23 @@ class Vehicle
      * 
      * @return array
      */
-    public static function getAllVehicles(bool $sortByAsc): array|false
+    public static function getAllVehicles(bool $sortByAsc, bool $isArchived = false): array|false
     {
         $pdo = Database::connect();
+
+        if ($isArchived == false) {
+            $archive = 'IS NULL';
+        } else {
+            $archive = 'IS NOT NULL';
+        }
 
         // attention sur JOIN
         // $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `categories`.`name`
         // ON clé primaire et clé étrangère
         $sql = 'SELECT * FROM `vehicles` 
         INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` IS NULL
-        ORDER BY `categories`.`name`';
+        WHERE `deleted_at` ' . $archive . ' ORDER BY `categories`.`name`';
+
 
         $sqlAsc = $sql . ';';
         $sqlDesc = $sql . ' DESC;';
@@ -455,44 +461,6 @@ class Vehicle
 
     /**
      * 
-     * Méthode permettant de retourner la liste de tous les véhicules
-     * 
-     * @param bool $sortByAsc
-     * 
-     * @return array
-     */
-    public static function getAllArchivedVehicles(bool $sortByAsc): array|false
-    {
-        $pdo = Database::connect();
-
-        // attention sur JOIN
-        // $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `categories`.`name`
-        // ON clé primaire et clé étrangère
-        $sql = 'SELECT * FROM `vehicles` 
-        INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` IS NOT NULL
-        ORDER BY `categories`.`name`';
-
-        $sqlAsc = $sql . ';';
-        $sqlDesc = $sql . ' DESC;';
-
-        // pour pouvoir trier les catégories selon l'ordre alphabétique 
-        // envoyer sur URL / marqueur subsitutive 
-
-        // query : PDOStatement | false
-        if ($sortByAsc) {
-            $sth = $pdo->query($sqlAsc);
-        } else {
-            $sth = $pdo->query($sqlDesc);
-        }
-
-        $result = $sth->fetchAll(PDO::FETCH_OBJ);
-
-        return $result;
-    }
-
-    /**
-     * 
      * Méthode permettant d'archiver le véhicule concerné
      * 
      * @param int $id_vehicle
@@ -503,6 +471,7 @@ class Vehicle
     {
         $pdo = Database::connect();
 
+        // fonction SQL: NOW() (heure de serveur des données) , décalage avec l'heure réelle (heure de web)
         $sql = 'UPDATE `vehicles`
         SET `deleted_at` = NOW()
         WHERE `id_vehicle` =:id_vehicle;';
@@ -537,10 +506,10 @@ class Vehicle
 
         $sth->execute();
 
-        if (!$sth->rowCount() <= 0) {
-            return false;
-        } else {
+        if ($sth->rowCount() > 0) {
             return true;
+        } else {
+            return false;
         }
     }
 

@@ -13,30 +13,12 @@ try {
     // suppression du véhicule
     $isDeleted = Vehicle::delete($idVehicle);
 
-
     if ($isDeleted) {
-        // Assurer le bon chemin du fichier en ajoutant $_SERVER['DOCUMENT_ROOT']
-        if ($vehicle->picture !== NULL) {
-
-            $path = $_SERVER['DOCUMENT_ROOT'] . "/public/uploads/vehicles/$vehicle->picture";
-
-            // vérifier si le fichier existe avant de supprimer
-            if (file_exists($path)) {
-                // supprimer le fichier. UNLINK retourner une valeur booléenne
-                if (unlink($path)) {
-                    $msg = 'Véhicule supprimé avec succès.';
-                } else {
-                    $msg = 'Erreur lors de la suppression de l\'image';
-                }
-            } else {
-                $msg = 'L\'image n\'existe pas';
-            }
-        // s'il n'y a pas d'image
-        } else {
-            $msg = 'Véhicule supprimé avec succès.';
-        }
+        $path = __DIR__ . "/../../public/uploads/vehicles/$vehicle->picture";
+        @unlink($path);
+        $msg = 'Véhicule supprimé avec succès.';
     } else {
-        $msg = 'Erreur, les données n\'ont pas été supprimées.';
+        $msg = 'Le véhicule n\'a pas été supprimé.';
     }
 
     $_SESSION['msg'] = $msg;

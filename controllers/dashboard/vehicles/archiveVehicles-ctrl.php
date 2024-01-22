@@ -7,6 +7,8 @@ try {
 
     $title = 'Liste des véhicules archivés';
 
+    $archived = true;
+
     // Récupération de l'ID du véhicule et nettoyage
     $idVehicle = intval(filter_input(INPUT_GET, 'id_vehicle', FILTER_SANITIZE_NUMBER_INT));
 
@@ -22,7 +24,7 @@ try {
         $sortByAsc = false;
     }
 
-    $vehicles = Vehicle::getAllArchivedVehicles($sortByAsc);
+    $vehicles = Vehicle::getAllVehicles($sortByAsc, $archived);
 
     $msg = filter_var($_SESSION['msg'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -41,5 +43,5 @@ try {
 
 // views
 include __DIR__ . '/../../../views/templates/header_dashboard.php';
-include __DIR__ . '/../../../views/dashboard/vehicles/archiveVehicles.php';
+include __DIR__ . '/../../../views/dashboard/vehicles/listVehicles.php';
 include __DIR__ . '/../../../views/templates/footer_dashboard.php';

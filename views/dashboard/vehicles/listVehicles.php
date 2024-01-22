@@ -1,11 +1,16 @@
 <div class="card border-2 text-center">
     <div class="p-5">
-        <h1>Liste des véhicules</h1>
+        <h1>Liste des véhicules <?= ($archived==true)  ? 'archivés': '' ?></h1>
         <span class="text-success fw-bold"><?= $msg ?? '' ?></span>
         <span class="text-danger fw-bold"><?= $error ?? '' ?></span>
         <div class="d-flex justify-content-end">
-            <a href="/controllers/dashboard/vehicles/addVehicles-ctrl.php"><button type="submit" class="btn btn-dark text-white m-4" value="Envoyer">Ajouter un véhicule</button></a>
-            <a href="/controllers/dashboard/vehicles/archiveVehicles-ctrl.php"><button type="submit" class="btn btn-dark text-white m-4" value="Envoyer">Liste des véhicules archivés</button></a>
+            <?php if($archived == false) {
+                echo '<a href="/controllers/dashboard/vehicles/addVehicles-ctrl.php" class="btn btn-dark text-white m-4"> Ajouter un véhicule</a>';
+                echo '<a href="/controllers/dashboard/vehicles/archiveVehicles-ctrl.php" class="btn btn-dark text-white m-4">Liste des véhicules archivés</a>';
+            } else {
+                echo '<a href="/controllers/dashboard/vehicles/listVehicles-ctrl.php" class="btn btn-dark text-white m-4">Liste des véhicules</a>';       
+            } ?>
+                 
         </div>
         <!-- LISTE DES VEHICULES -->
         <div class="d-flex justify-content-end gap-5">
@@ -21,8 +26,8 @@
                         <th scope="col">Modèle</th>
                         <th scope="col">Image</th>
                         <!-- <th scope="col">Créé le</th> -->
-                        <th scope="col">Modifier</th>
-                        <th scope="col">Archiver</th>
+                        <th scope="col"><?= ($archived==true)  ? 'Déarchiver': 'Modifier' ?></th>
+                        <th scope="col"><?= ($archived==true)  ? 'Supprimer': 'Archiver' ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -64,11 +69,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            Pouvez-vous confirmer votre décision d'archiver le véhicule ?
+            Pouvez-vous confirmer votre choix ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger archiveVehicleBtn" data-bs-dismiss="modal">Oui</button>
-                <button type="button" data-bs-dismiss="modal" class="btn btn-dark noDeleteVehicleBtn">Non</button>
+                <button type="button" data-bs-dismiss="modal" class="btn btn-dark">Non</button>
             </div>
         </div>
     </div>
