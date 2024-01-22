@@ -1,3 +1,5 @@
+<h1 class="text-center mb-5">Toutes les véhicles disponibles</h1>
+
 <div class="row d-flex justify-content-center">
     <!-- Une carte  -->
 
@@ -20,16 +22,17 @@
         </div>
     <?php } ?>
 
-    <div class="pagination d-flex justify-content-center align-items-center">
-        <!-- Page précédente -->
-        <a href="">&laquo;</a>
-        <!-- Nombre des pages -->
-        <?php
-        for($counter = 1; $counter<= $nbOfPages; $counter++ ) {?>
-            <a href="/controllers/vehicles_list_ctrl.php?page=<?=$counter?>"><?=$counter?></a>
-        <?php } ?>
-        <!-- Page suivante -->
-        <a href="#">&raquo;</a>
-    </div>
 
-</div>
+    <div class="center">
+        <div class="pagination"> 
+            <!-- page précédente -->
+            <a href="/controllers/vehicles_list_ctrl.php?page=<?= $previousPage ?>">&laquo;</a>
+            <!-- détail des pages -->
+            <?php
+            for ($counter = 1; $counter <= $nbOfPages; $counter++) { ?>
+                <a href="/controllers/vehicles_list_ctrl.php?page=<?= $counter ?>"><?= $counter ?></a>
+            <?php } ?>
+            <!-- page suivante -->
+            <a href="/controllers/vehicles_list_ctrl.php?page=<?= $nextPage ?>">&raquo;</a>
+        </div>
+    </div>

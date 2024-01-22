@@ -531,7 +531,7 @@ class Vehicle
         $pdo = Database :: connect();
 
         $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` IS NULL ORDER BY `categories`.`name` LIMIT 10 OFFSET :offset;';
+        WHERE `deleted_at` IS NULL ORDER BY `categories`.`name` LIMIT '.PER_PAGE.' OFFSET :offset;';
 
         $sth = $pdo->prepare($sql);
 

@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__ . '/../models/Vehicle.php');
+require_once(__DIR__ . '/../config/init.php');
 
 try {
     $title = 'Accueil';
@@ -18,14 +19,31 @@ try {
         $page = 1;
     }
 
-    $offset = 10 * ($page - 1);
+    if(isset($_GET['page']) && $_GET['page'] > 1) {
+        $previousPage = (int)$_GET['page'] - 1;
+    } else {
+        $previousPage = 1;
+    }
+
+   
+
+    $offset = PER_PAGE * ($page - 1);
+
     $vehicles = Vehicle::pagination($offset);
 
-    $allPages = Vehicle::nbOfAllVehicles();
-    
+    $allVehicles = Vehicle::nbOfAllVehicles();
 
-    $nbOfPages = ceil($allPages / 10);
-    
+    $nbOfPages = ceil($allVehicles / 10);
+
+    if(!isset($_GET['page'])) {
+        $nextPage = 2 ;
+    } else {
+        if($_GET['page'] >= $nbOfPages) {
+            $nextPage = (int)$_GET['page'];
+        } else {
+            $nextPage = (int)$_GET['page'] + 1; 
+        }
+    }
     
 
 } catch (Throwable $e) {
