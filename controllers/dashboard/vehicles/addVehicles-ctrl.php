@@ -7,7 +7,6 @@ try {
     $categories = Category::getAll();
     // transformer un tableau avec les objets en un tableau avec les valeurs
 
-
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
         // Catégorie

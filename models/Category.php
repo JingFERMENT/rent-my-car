@@ -191,7 +191,7 @@ class Category
         $sth->execute();
 
         // fetchAll     => renvoyer toutes les lignes sous forme de tableau associatif
-        // fetch        => récupérer une ligne à la fois
+        // fetch        => récupérer première ligne à trouver ()
         // fetchColumn  => récupérer la valeur de la première colonne de chaque ligne.
         $result = $sth->fetchColumn();
 

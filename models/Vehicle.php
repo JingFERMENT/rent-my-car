@@ -334,8 +334,8 @@ class Vehicle
         // ON clé primaire et clé étrangère
         $sql = 'SELECT * FROM `vehicles` 
         INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` ' . $archive . ' ORDER BY `categories`.`name`'.
-        "LIMIT $start, $per_page;";
+        WHERE `deleted_at` ' . $archive . ' ORDER BY `categories`.`name`' .
+            "LIMIT $start, $per_page;";
 
 
         $sqlAsc = $sql . ';';
@@ -355,6 +355,57 @@ class Vehicle
 
         return $result;
     }
+
+
+    public static function pagination(int $offset, int $id_category = 0)
+    {
+
+        $pdo = Database::connect();
+
+        if ($id_category != 0) {
+
+            $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
+        WHERE `deleted_at` IS NULL AND `vehicles`.`id_category`= :id_category ORDER BY `categories`.`name` 
+        LIMIT ' . PER_PAGE . ' OFFSET :offset;';
+
+            $sth = $pdo->prepare($sql);
+
+            $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+
+
+        } else {
+
+            $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
+        WHERE `deleted_at` IS NULL  ORDER BY `categories`.`name` 
+        LIMIT ' . PER_PAGE . ' OFFSET :offset;';
+
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
+        }
+
+        $sth->execute();
+
+        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+
+        return $result;
+    }
+
+
+    public static function filterByCategory()
+    {
+        $pdo = Database::connect();
+
+        $sql = 'SELECT DISTINCT `vehicles`.`id_category` , `name` FROM vehicles 
+        INNER JOIN `Categories` ON (`categories`.`id_category` = `vehicles`.`id_category`) ORDER BY `name`;';
+
+        $sth = $pdo->query($sql);
+
+        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+
+        return $result;
+    }
+
 
     /**
      * 
@@ -525,46 +576,26 @@ class Vehicle
         }
     }
 
-    public static function pagination(int $offset)
-    {
-    
-        $pdo = Database :: connect();
 
-        $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` IS NULL ORDER BY `categories`.`name` LIMIT '.PER_PAGE.' OFFSET :offset;';
+
+    public static function nbOfAllVehicles(int $id_category = null ):int
+    {
+
+        $pdo = Database::connect();
+
+        $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles` 
+        WHERE `id_category` = :id_category;';
 
         $sth = $pdo->prepare($sql);
 
-        $sth->bindValue(':offset', $offset, PDO::PARAM_INT); 
+        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
 
         $sth->execute();
 
-        $result = $sth->fetchAll(PDO::FETCH_OBJ);
+        $result = $sth->fetchColumn();
 
         return $result;
     }
-
-public static function nbOfAllVehicles(){
-
-    $pdo = Database::connect();
-
-    $sql = 'SELECT COUNT(*) AS nb_vehicles FROM `vehicles`;';
-
-    $sth = $pdo->query($sql);
-
-    $sth->execute(); 
-
-    $result = $sth->fetchColumn(); 
-
-    return $result;
-
 }
 
-
-
-
- 
-
-
-
-}
+// paramètre nommmé : prendre le nom de paramètre, puis affecter une valeur, quelque soit leurs ordres

@@ -25,10 +25,14 @@
     border: 1px solid #ddd;
     margin: 0 4px;
   }
-  
+
   .pagination a:hover{
     background-color: black;
     color:white;
+  }
+
+  .form-select {
+    width: 12rem;
   }
   
 

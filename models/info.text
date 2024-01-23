@@ -1,3 +1,0 @@
-limit = 2 (constant)
-page = 4 (utilisateur nous transmet)
-offset = limit * (page - 1) 
