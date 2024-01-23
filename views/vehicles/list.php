@@ -5,7 +5,7 @@
 <form class="d-flex justify-content-start my-5">
     <select name="id_category" class="form-select" aria-label="Default select example">
         <option selected disabled>Par catégorie</option>
-        <?php foreach ($categories as $category) { 
+        <?php foreach ($categories as $category) {
             $isSelected = ($id_category == $category->id_category) ? "selected" : '';
             echo "<option value=\"$category->id_category\" $isSelected >$category->name</option>";
         } ?>
@@ -23,13 +23,13 @@
                 <div class="h-50">
                     <?php if (!is_null($vehicle->picture)) {
                         echo "<img src=\"/public/uploads/vehicles/$vehicle->picture\" class=\"h-100 card-img-top img-fluid\" alt=\"\$vehicle->brand - $vehicle->model\">";
-                    }else {
+                    } else {
                         echo 'image par défaut';
-                    }?>
-                
+                    } ?>
+
                 </div>
                 <div class="card-img-overlay p-0 text-end">
-                    <span class="badge text-bg-warning rounded-0"><?= $vehicle->name?></span>
+                    <span class="badge text-bg-warning rounded-0"><?= $vehicle->name ?></span>
                 </div>
                 <div class="card-body text-center">
                     <h5 class="card-title"><?= $vehicle->brand ?></h5>
@@ -42,17 +42,22 @@
     <?php } ?>
 
     <div class="center">
-        <div class="pagination"> 
+        <div class="pagination">
             <!-- page précédente -->
-            <a href="/controllers/vehicles_list_ctrl.php?page=<?= $previousPage?>&id_category=">&laquo;</a>
+            <a href="?page=<?=$previousPage?>&id_category=<?=$id_category?>">&laquo;</a>
             <!-- détail des pages -->
             <?php
-            for ($counter = 1; $counter <= $nbOfPages; $counter++) { ?>
-                <a href="/controllers/vehicles_list_ctrl.php?page=<?= $counter?>&id_category=<?=$id_category?>"><?= $counter ?></a>
-            <?php } ?>
+            for ($counter = 1; $counter <= $nbOfPages; $counter++) {
+                if($counter == $page) {
+                    echo "<a class=\"active\" href=\"?page=$counter&id_category=$id_category\">$counter</a>";
+                } else {
+                    echo "<a href=\"?page=$counter&id_category=$id_category\">$counter</a>";
+                }
+               
+            } ?>
             <!-- page suivante -->
-            <a href="/controllers/vehicles_list_ctrl.php?page=<?= $nextPage?>&id_category=">&raquo;</a>
+            <a href="?page=<?= $nextPage ?>&id_category=<?=$id_category?>">&raquo;</a>
         </div>
     </div>
 
-    <?php include __DIR__. '/card.php';
+    <?php include __DIR__ . '/card.php';

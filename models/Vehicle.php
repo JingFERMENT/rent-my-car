@@ -372,8 +372,6 @@ class Vehicle
 
             $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
             $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
-
-
         } else {
 
             $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
@@ -578,17 +576,23 @@ class Vehicle
 
 
 
-    public static function nbOfAllVehicles(int $id_category = null ):int
+    public static function nbOfAllVehicles(int $id_category = 0): int
     {
 
         $pdo = Database::connect();
 
-        $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles` 
+        if ($id_category != 0) {
+            $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles` 
         WHERE `id_category` = :id_category;';
 
-        $sth = $pdo->prepare($sql);
+            $sth = $pdo->prepare($sql);
 
-        $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+            $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+        } else {
+            $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles`;';
+
+            $sth = $pdo->query($sql);
+        }
 
         $sth->execute();
 

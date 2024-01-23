@@ -26,8 +26,13 @@
                         <th scope="col">Modèle</th>
                         <th scope="col">Image</th>
                         <!-- <th scope="col">Créé le</th> -->
-                        <th scope="col"><?= ($archived==true)  ? 'Déarchiver': 'Modifier' ?></th>
-                        <th scope="col"><?= ($archived==true)  ? 'Supprimer': 'Archiver' ?></th>
+                        <?php if ($archived==false) { ?>
+                            <th scope="col">Modifier</th>
+                            <th scope="col">Archiver</th>
+                        <?php } else { ?>
+                            <th scope="col">Déarchiver</th>
+                            <th scope="col">Supprimer</th>
+                        <?php } ?>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,11 +52,18 @@
                                 ?>
                             </td>
                             <!-- <td><?= (new DateTime($vehicle->created_at))->format('d-m-Y') ?></td> -->
+                            <?php if ($archived==false) { ?>
                             <td>
                                 <a class="text-dark" href="/controllers/dashboard/vehicles/updateVehicles-ctrl.php?id_vehicle=<?= $vehicle->id_vehicle ?>"><i class="fa-solid fa-pen-to-square"></i></a>
                             </td>
-                            <!-- Button trigger modal -->
-                            <td><a type="button" data-id="<?= $vehicle->id_vehicle ?>" data-bs-toggle="modal" data-bs-target="#exampleModal" class="text-dark modalOpenVehicleBtn"><i class="fa-solid fa-box-archive"></i></a></td>
+                            <!-- Button trigger modal to archive -->
+                            <td><a type="button" data-id="<?= $vehicle->id_vehicle ?>" data-bs-toggle="modal" data-bs-target="#archiveModal" class="text-dark modalOpenVehicleArchiveBtn"><i class="fa-solid fa-box-archive"></i></a></td>
+                            <?php } else { ?>
+                            <!-- Button trigger modal to un-archive -->
+                            <td><a type="button" data-id="<?= $vehicle->id_vehicle ?>" data-bs-toggle="modal" data-bs-target="#unarchiveModal" class="text-dark modalOpenVehicleUnarchiveBtn"><i class="fa-solid fa-pen-to-square"></i></a></td>
+                            <!-- Button trigger modal to trully delete -->
+                            <td><a type="button" data-id="<?= $vehicle->id_vehicle ?>" data-bs-toggle="modal" data-bs-target="#deleteModal" class="text-dark modalOpenVehicleDeleteBtn"><i class="fa-solid fa-box-archive"></i></a></td>
+                            <?php } ?>
                         </tr>
                     <?php } ?>
                 </tbody>
@@ -60,8 +72,45 @@
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modals -->
+<!-- Archive modal -->
+<div class="modal fade" id="archiveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-danger" id="exampleModalLabel">Archiver un véhicule</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            Pouvez-vous confirmer votre choix ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger archiveVehicleBtn" data-bs-dismiss="modal">Oui</button>
+                <button type="button" data-bs-dismiss="modal" class="btn btn-dark">Non</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Un-archive modal -->
+<div class="modal fade" id="unarchiveModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 text-danger" id="exampleModalLabel">Réactiver un véhicule</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            Pouvez-vous confirmer votre choix ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger unarchiveVehicleBtn" data-bs-dismiss="modal">Oui</button>
+                <button type="button" data-bs-dismiss="modal" class="btn btn-dark">Non</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -72,7 +121,7 @@
             Pouvez-vous confirmer votre choix ?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger archiveVehicleBtn" data-bs-dismiss="modal">Oui</button>
+                <button type="button" class="btn btn-danger deleteVehicleBtn" data-bs-dismiss="modal">Oui</button>
                 <button type="button" data-bs-dismiss="modal" class="btn btn-dark">Non</button>
             </div>
         </div>
