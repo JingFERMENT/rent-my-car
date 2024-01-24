@@ -319,69 +319,42 @@ class Vehicle
      * 
      * @return array
      */
-    public static function getAllVehicles(bool $sortByAsc, $start, $per_page, bool $isArchived = false): array|false
+    public static function getAllVehicles(bool $sortByAsc, int $offset, bool $isArchived = false, int $id_category = 0, string $keywords = null): array|false
     {
         $pdo = Database::connect();
 
-        if ($isArchived == false) {
-            $archive = 'IS NULL';
-        } else {
-            $archive = 'IS NOT NULL';
-        }
+        // condition pour archivage
+        $archive = $isArchived ? 'IS NOT NULL' : 'IS NULL';
 
-        // attention sur JOIN
-        // $sql = 'SELECT `id_vehicle`,`brand`,`model`,`registration`, `mileage`, `picture`, `created_at`, `vehicles`.`id_category`, `categories`.`name`
-        // ON clé primaire et clé étrangère
+        // condition pour rechercher
+        $research = $keywords ? " AND (`brand` LIKE :keywords OR `model` LIKE :keywords OR `name` LIKE :keywords OR `registration` LIKE :keywords)" : '';
+
+        // condition pour trier les categories
+        $sortCategory = ($id_category != 0) ? " AND `categories`.`id_category`= :id_category" : '';
+
+        // condition pour trier en croissance ou décroissance
+        $orderClause = $sortByAsc ? ' ASC' : ' DESC';
+
         $sql = 'SELECT * FROM `vehicles` 
-        INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` ' . $archive . ' ORDER BY `categories`.`name`' .
-            "LIMIT $start, $per_page;";
+                INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
+                WHERE `deleted_at` ' . $archive . $research . $sortCategory .
+            ' ORDER BY `categories`.`name`' . $orderClause .
+            ' LIMIT ' . PER_PAGE . ' OFFSET :offset';
 
+        $sth = $pdo->prepare($sql);
 
-        $sqlAsc = $sql . ';';
-        $sqlDesc = $sql . ' DESC;';
+        // prepare the SQL statement
 
-        // pour pouvoir trier les catégories selon l'ordre alphabétique 
-        // envoyer sur URL / marqueur subsitutive 
-
-        // query : PDOStatement | false
-        if ($sortByAsc) {
-            $sth = $pdo->query($sqlAsc);
-        } else {
-            $sth = $pdo->query($sqlDesc);
+        if ($keywords) {
+            // caractère joker
+            $sth->bindValue(':keywords', '%'.$keywords.'%');
         }
-
-        $result = $sth->fetchAll(PDO::FETCH_OBJ);
-
-        return $result;
-    }
-
-
-    public static function pagination(int $offset, int $id_category = 0)
-    {
-
-        $pdo = Database::connect();
-        $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) WHERE `deleted_at` IS NULL'; 
-
 
         if ($id_category != 0) {
-
-            $sql .= ' AND `vehicles`.`id_category`= :id_category ORDER BY `categories`.`name` 
-            LIMIT ' . PER_PAGE . ' OFFSET :offset;';
-
-            $sth = $pdo->prepare($sql);
-
-            $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
-
             $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
-        } else {
-
-            $sql .= ' ORDER BY `categories`.`name` LIMIT ' . PER_PAGE . ' OFFSET :offset;';
-
-            $sth = $pdo->prepare($sql);
-
-            $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
         }
+
+        $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
 
         $sth->execute();
 
@@ -390,6 +363,38 @@ class Vehicle
         return $result;
     }
 
+
+    public static function nbOfAllVehicles(int $id_category = 0, string $keywords = null): int
+    {
+
+        $pdo = Database::connect();
+
+        $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles` 
+        JOIN `categories` ON `categories`.id_category = `vehicles`.id_category';
+
+        // if ($id_category != 0) {
+        if ($id_category) {
+            $sql .= ' WHERE `categories`.`id_category` = :id_category;';
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+        } else {
+            $sql .= '';
+            $sth = $pdo->query($sql);
+        }
+
+        if ($keywords) {
+            $sql .= ' WHERE `brand` LIKE :keywords OR `model` LIKE :keywords OR `name` LIKE :keywords OR `registration` LIKE :keywords';
+            $sth = $pdo->prepare($sql);
+            $sth->bindValue(':keywords', $keywords.'%');
+        } else {
+            $sql .= '';
+        }
+
+        $sth->execute();
+        $result = $sth->fetchColumn();
+
+        return $result;
+    }
 
     public static function filterByCategory()
     {
@@ -573,31 +578,6 @@ class Vehicle
             // Retourne true dans le cas contraire (tout s'est bien passé)
             return true;
         }
-    }
-
-
-
-    public static function nbOfAllVehicles(int $id_category = 0): int
-    {
-
-        $pdo = Database::connect();
-
-        $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles`';
-         
-        // false '' 0  if ($id_category != 0) {
-        if ($id_category) { 
-            $sql .= ' WHERE `id_category` = :id_category;';
-            $sth = $pdo->prepare($sql);
-            $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
-        } else {
-            $sql .= ';';
-            $sth = $pdo->query($sql);
-        }
-
-        $sth->execute();
-        $result = $sth->fetchColumn();
-
-        return $result;
     }
 }
 

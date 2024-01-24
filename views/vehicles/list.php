@@ -2,28 +2,28 @@
 <h1 class="text-center">Listes véhicles disponibles</h1>
 
 <!-- FILTRER PAR CATEGORIE  -->
-<form class="d-flex justify-content-start my-5">
-    <select name="id_category" class="form-select" aria-label="Default select example">
-        <option selected disabled>Par catégorie</option>
-        <?php foreach ($categories as $category) {
-            $isSelected = ($id_category == $category->id_category) ? "selected" : '';
-            echo "<option value=\"$category->id_category\" $isSelected >$category->name</option>";
-        } ?>
-    </select>
-    <div class="px-2">
-        <button type="submit" class="btn btn-dark text-white" value="Ajouter">Filtrer</button>
-    </div>
-</form>
+<div class="d-flex justify-content-between">
+    <form class="d-flex justify-content-start my-5">
+        <select name="id_category" class="form-select" aria-label="Default select example">
+            <option selected disabled>Par catégorie</option>
+            <?php foreach ($categories as $category) {
+                $isSelected = ($id_category == $category->id_category) ? "selected" : '';
+                echo "<option value=\"$category->id_category\" $isSelected >$category->name</option>";
+            } ?>
+        </select>
+        <div class="px-2">
+            <button type="submit" class="btn btn-dark text-white" value="Ajouter">Filtrer</button>
+        </div>
+    </form>
 
-<!-- FONCTION RECHERCHE  -->
-<form class="d-flex justify-content-start my-5">
-    <select name="id_category" class="form-select" aria-label="Default select example">
-        <option selected disabled>Par catégorie</option>
-    </select>
-    <div class="px-2">
-        <button type="submit" class="btn btn-dark text-white" value="Ajouter">rE</button>
-    </div>
-</form>
+    <!-- FONCTION RECHERCHE  -->
+    <form class="d-flex justify-content-start my-5 form-inline">
+        <input class="form-control" type="search" placeholder="Mots clés" name = "keywords" value = "<?=$keywords ?? ''?>" aria-label="Search">
+        <div class="px-2">
+            <button class="btn btn-dark text-white" type="submit">Rechercher</button>
+        </div>
+    </form>
+</div>
 
 <div class="row d-flex justify-content-center">
     <!-- Une carte  -->
@@ -54,20 +54,19 @@
     <div class="center">
         <div class="pagination">
             <!-- page précédente -->
-            <a href="?page=<?=$previousPage?>&id_category=<?=$id_category?>">&laquo;</a>
+            <a href="?page=<?= $previousPage ?>&id_category=<?= $id_category ?>">&laquo;</a>
             <!-- détail des pages -->
             <?php
             for ($counter = 1; $counter <= $nbOfPages; $counter++) {
-                if($counter == $page) {
+                if ($counter == $page) {
                     echo "<a class=\"active\" href=\"?page=$counter&id_category=$id_category\">$counter</a>";
                 } else {
                     echo "<a href=\"?page=$counter&id_category=$id_category\">$counter</a>";
                 }
-               
             } ?>
             <!-- page suivante -->
-            <a href="?page=<?=$nextPage?>&id_category=<?=$id_category?>">&raquo;</a>
+            <a href="?page=<?= $nextPage ?>&id_category=<?= $id_category ?>">&raquo;</a>
         </div>
     </div>
 
-<?php include __DIR__ . '/card.php';
+    <?php include __DIR__ . '/card.php';

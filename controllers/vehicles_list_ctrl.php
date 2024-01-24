@@ -2,6 +2,7 @@
 
 require_once(__DIR__ . '/../models/Vehicle.php');
 require_once(__DIR__ . '/../config/init.php');
+require_once(__DIR__ . '/../helpers/dd.php');
 
 try {
     $title = 'Accueil';
@@ -24,8 +25,13 @@ try {
 
     $id_category = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
     $offset = PER_PAGE * ($page - 1);
-    $vehicles = Vehicle::pagination($offset, $id_category);
-    $nbOfAllVehicles = Vehicle::nbOfAllVehicles($id_category);
+    $keywords = filter_input(INPUT_GET, 'keywords', FILTER_SANITIZE_SPECIAL_CHARS);
+    
+    $vehicles = Vehicle::getAllVehicles('ASC', $offset, false, $id_category, $keywords);
+    $nbOfAllVehicles = Vehicle::nbOfAllVehicles($id_category, $keywords);
+    
+    
+    
 
     // round : arrondir au plus proche
     // ceil : arrondir au ceil / floor: arrond dans 
