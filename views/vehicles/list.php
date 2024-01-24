@@ -42,11 +42,10 @@
                     <span class="badge text-bg-warning rounded-0"><?= $vehicle->name ?></span>
                 </div>
                 <div class="card-body text-center">
-                    <h5 class="card-title"><?= $vehicle->brand ?></h5>
-                    <p class="card-text fst-italic"><?= $vehicle->model ?></p>
-                    <a href="#" class="btn btn-dark">Réserver</a>
+                    <h5 class="card-title"><?= $vehicle->brand?></h5>
+                    <p class="card-text fst-italic"><?= $vehicle->model?></p>
+                    <a href="/controllers/vehicles_detail_ctrl.php&id_vehicle=<?=$vehicle->id_vehcile?>" target = "_blank" class="btn btn-dark" value="Réserver">Réserver</a>
                 </div>
-
             </div>
         </div>
     <?php } ?>

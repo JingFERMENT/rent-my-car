@@ -385,7 +385,7 @@ class Vehicle
         if ($keywords) {
             $sql .= ' WHERE `brand` LIKE :keywords OR `model` LIKE :keywords OR `name` LIKE :keywords OR `registration` LIKE :keywords';
             $sth = $pdo->prepare($sql);
-            $sth->bindValue(':keywords', $keywords.'%');
+            $sth->bindValue(':keywords', '%'.$keywords.'%');
         } else {
             $sql .= '';
         }
