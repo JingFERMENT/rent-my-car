@@ -15,6 +15,16 @@
     </div>
 </form>
 
+<!-- FONCTION RECHERCHE  -->
+<form class="d-flex justify-content-start my-5">
+    <select name="id_category" class="form-select" aria-label="Default select example">
+        <option selected disabled>Par catégorie</option>
+    </select>
+    <div class="px-2">
+        <button type="submit" class="btn btn-dark text-white" value="Ajouter">rE</button>
+    </div>
+</form>
+
 <div class="row d-flex justify-content-center">
     <!-- Une carte  -->
     <?php foreach ($vehicles as $vehicle) { ?>
@@ -56,8 +66,8 @@
                
             } ?>
             <!-- page suivante -->
-            <a href="?page=<?= $nextPage ?>&id_category=<?=$id_category?>">&raquo;</a>
+            <a href="?page=<?=$nextPage?>&id_category=<?=$id_category?>">&raquo;</a>
         </div>
     </div>
 
-    <?php include __DIR__ . '/card.php';
+<?php include __DIR__ . '/card.php';

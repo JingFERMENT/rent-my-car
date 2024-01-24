@@ -361,24 +361,25 @@ class Vehicle
     {
 
         $pdo = Database::connect();
+        $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) WHERE `deleted_at` IS NULL'; 
+
 
         if ($id_category != 0) {
 
-            $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` IS NULL AND `vehicles`.`id_category`= :id_category ORDER BY `categories`.`name` 
-        LIMIT ' . PER_PAGE . ' OFFSET :offset;';
+            $sql .= ' AND `vehicles`.`id_category`= :id_category ORDER BY `categories`.`name` 
+            LIMIT ' . PER_PAGE . ' OFFSET :offset;';
 
             $sth = $pdo->prepare($sql);
 
             $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
+
             $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
         } else {
 
-            $sql = 'SELECT * FROM `vehicles`  INNER JOIN `categories` ON (`categories`.`id_category` = `vehicles`.`id_category` ) 
-        WHERE `deleted_at` IS NULL  ORDER BY `categories`.`name` 
-        LIMIT ' . PER_PAGE . ' OFFSET :offset;';
+            $sql .= ' ORDER BY `categories`.`name` LIMIT ' . PER_PAGE . ' OFFSET :offset;';
 
             $sth = $pdo->prepare($sql);
+
             $sth->bindValue(':offset', $offset, PDO::PARAM_INT);
         }
 
@@ -581,21 +582,19 @@ class Vehicle
 
         $pdo = Database::connect();
 
-        if ($id_category != 0) {
-            $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles` 
-        WHERE `id_category` = :id_category;';
-
+        $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles`';
+         
+        // false '' 0  if ($id_category != 0) {
+        if ($id_category) { 
+            $sql .= ' WHERE `id_category` = :id_category;';
             $sth = $pdo->prepare($sql);
-
             $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
         } else {
-            $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles`;';
-
+            $sql .= ';';
             $sth = $pdo->query($sql);
         }
 
         $sth->execute();
-
         $result = $sth->fetchColumn();
 
         return $result;
