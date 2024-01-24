@@ -424,7 +424,9 @@ class Vehicle
         // appel de la méthode static connect
         $pdo = Database::connect();
 
-        $sql = 'SELECT * FROM `vehicles` WHERE `id_vehicle` =:id_vehicle;';
+        $sql = 'SELECT * FROM `vehicles` 
+        JOIN `categories` ON `categories`.id_category = `vehicles`.id_category 
+        WHERE `id_vehicle` =:id_vehicle;';
 
         $sth = $pdo->prepare($sql);
 

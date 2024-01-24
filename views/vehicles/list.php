@@ -17,8 +17,9 @@
     </form>
 
     <!-- FONCTION RECHERCHE  -->
+    <!-- ATTENTION ICI LES METHODES POUR LA FORME EST EN GET PAS EN POST -->
     <form class="d-flex justify-content-start my-5 form-inline">
-        <input class="form-control" type="search" placeholder="Mots clés" name = "keywords" value = "<?=$keywords ?? ''?>" aria-label="Search">
+        <input class="form-control" type="search" placeholder="Mots clés" name="keywords" value="<?= $keywords ?? '' ?>" aria-label="Search">
         <div class="px-2">
             <button class="btn btn-dark text-white" type="submit">Rechercher</button>
         </div>
@@ -29,22 +30,22 @@
     <!-- Une carte  -->
     <?php foreach ($vehicles as $vehicle) { ?>
         <div class="col-12 col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 m-auto">
+            <div class="card h-100 m-auto ">
                 <div class="h-50">
+                    <div class="position-absolute top-0 end-0">
+                        <span class="badge text-bg-warning rounded-0"><?= $vehicle->name ?></span>
+                    </div>
                     <?php if (!is_null($vehicle->picture)) {
                         echo "<img src=\"/public/uploads/vehicles/$vehicle->picture\" class=\"h-100 card-img-top img-fluid\" alt=\"\$vehicle->brand - $vehicle->model\">";
                     } else {
                         echo 'image par défaut';
                     } ?>
+                </div>
 
-                </div>
-                <div class="card-img-overlay p-0 text-end">
-                    <span class="badge text-bg-warning rounded-0"><?= $vehicle->name ?></span>
-                </div>
                 <div class="card-body text-center">
-                    <h5 class="card-title"><?= $vehicle->brand?></h5>
-                    <p class="card-text fst-italic"><?= $vehicle->model?></p>
-                    <a href="/controllers/vehicles_detail_ctrl.php&id_vehicle=<?=$vehicle->id_vehcile?>" target = "_blank" class="btn btn-dark" value="Réserver">Réserver</a>
+                    <h5 class="card-title"><?= $vehicle->brand ?></h5>
+                    <p class="card-text fst-italic"><?= $vehicle->model ?></p>
+                    <a href="/controllers/vehicles_detail_ctrl.php?id_vehicle=<?=$vehicle->id_vehicle?>" target="_blank" class="btn btn-dark" value="Réserver">Réserver</a>
                 </div>
             </div>
         </div>

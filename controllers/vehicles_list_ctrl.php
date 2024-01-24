@@ -30,9 +30,6 @@ try {
     $vehicles = Vehicle::getAllVehicles('ASC', $offset, false, $id_category, $keywords);
     $nbOfAllVehicles = Vehicle::nbOfAllVehicles($id_category, $keywords);
     
-    
-    
-
     // round : arrondir au plus proche
     // ceil : arrondir au ceil / floor: arrond dans 
     $nbOfPages = ceil($nbOfAllVehicles / PER_PAGE);
