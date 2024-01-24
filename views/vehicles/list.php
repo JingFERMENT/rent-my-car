@@ -38,14 +38,14 @@
                     <?php if (!is_null($vehicle->picture)) {
                         echo "<img src=\"/public/uploads/vehicles/$vehicle->picture\" class=\"h-100 card-img-top img-fluid\" alt=\"\$vehicle->brand - $vehicle->model\">";
                     } else {
-                        echo 'image par défaut';
+                        echo "<img src=\"/public/uploads/vehicles/default_image-vehicle.jpg\" class=\"h-100 card-img-top img-fluid\" alt=\"\$vehicle->brand - $vehicle->model\">";;
                     } ?>
                 </div>
 
                 <div class="card-body text-center">
                     <h5 class="card-title"><?= $vehicle->brand ?></h5>
                     <p class="card-text fst-italic"><?= $vehicle->model ?></p>
-                    <a href="/controllers/vehicles_detail_ctrl.php?id_vehicle=<?=$vehicle->id_vehicle?>" target="_blank" class="btn btn-dark" value="Réserver">Réserver</a>
+                    <a href="/controllers/vehicles_detail_ctrl.php?id_vehicle=<?=$vehicle->id_vehicle?>" target="_blank" class="btn btn-dark" >Découvrir</a>
                 </div>
             </div>
         </div>
