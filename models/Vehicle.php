@@ -21,9 +21,7 @@ class Vehicle
     private ?string $deleted_at;
 
     private ?int $id_category;
-    //private Object|false $category;
-
-
+ 
     // Méthode magique appelée automatiquement lors de l'instanciation de la classe 'Vehicles'
     //* Elle assigne toutes les properties à la création de l'objet
 
