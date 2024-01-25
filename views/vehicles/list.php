@@ -1,25 +1,25 @@
 <!-- GRANDE TITRE -->
 <h1 class="text-center">Listes véhicles disponibles</h1>
 
-<!-- FILTRER PAR CATEGORIE  -->
-<div class="d-flex justify-content-between">
-    <form class="d-flex justify-content-start my-5">
+<!-- FORM: un seul !!!! Méthode = GET !!!!! -->
+<div class="d-flex justify-content-center">
+    <form class="d-flex justify-content-between my-5">
+        <!-- TRIER PAR CATEGORIE -->
         <select name="id_category" class="form-select" aria-label="Default select example">
-            <option selected disabled>Par catégorie</option>
+            <option selected value="0">Toutes les catégories</option>
             <?php foreach ($categories as $category) {
                 $isSelected = ($id_category == $category->id_category) ? "selected" : '';
                 echo "<option value=\"$category->id_category\" $isSelected >$category->name</option>";
             } ?>
         </select>
+        
         <div class="px-2">
             <button type="submit" class="btn btn-dark text-white" value="Ajouter">Filtrer</button>
         </div>
-    </form>
 
-    <!-- FONCTION RECHERCHE  -->
-    <!-- ATTENTION ICI LES METHODES POUR LA FORME EST EN GET PAS EN POST -->
-    <form class="d-flex justify-content-start my-5 form-inline">
+        <!-- RECHERCHE  -->
         <input class="form-control" type="search" placeholder="Mots clés" name="keywords" value="<?= $keywords ?? '' ?>" aria-label="Search">
+        
         <div class="px-2">
             <button class="btn btn-dark text-white" type="submit">Rechercher</button>
         </div>
@@ -45,7 +45,7 @@
                 <div class="card-body text-center">
                     <h5 class="card-title"><?= $vehicle->brand ?></h5>
                     <p class="card-text fst-italic"><?= $vehicle->model ?></p>
-                    <a href="/controllers/vehicles_detail_ctrl.php?id_vehicle=<?=$vehicle->id_vehicle?>" target="_blank" class="btn btn-dark" >Découvrir</a>
+                    <a href="/controllers/vehicles_detail_ctrl.php?id_vehicle=<?= $vehicle->id_vehicle ?>" target="_blank" class="btn btn-dark">Découvrir</a>
                 </div>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 }
             } ?>
             <!-- page suivante -->
-            <a href="?page=<?= $nextPage ?>&id_category=<?= $id_category ?>">&raquo;</a>
+            <a href="?page=<?= $nextPage ?>&id_category=<?= $id_category ?>&keywords=<?= $keywords ?>">&raquo;</a>
         </div>
     </div>
 

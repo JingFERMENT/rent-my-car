@@ -327,7 +327,8 @@ class Vehicle
         $archive = $isArchived ? 'IS NOT NULL' : 'IS NULL';
 
         // condition pour rechercher
-        $research = $keywords ? " AND (`brand` LIKE :keywords OR `model` LIKE :keywords OR `name` LIKE :keywords OR `registration` LIKE :keywords)" : '';
+        // match SQL
+        $research = $keywords ? " AND (`vehicles`.`brand` LIKE :keywords OR `vehicles`.`model` LIKE :keywords OR `categories`.`name` LIKE :keywords OR `registration` LIKE :keywords)" : '';
 
         // condition pour trier les categories
         $sortCategory = ($id_category != 0) ? " AND `categories`.`id_category`= :id_category" : '';
@@ -346,7 +347,7 @@ class Vehicle
         // prepare the SQL statement
 
         if ($keywords) {
-            // caractère joker
+            // % est un caractère joker
             $sth->bindValue(':keywords', '%'.$keywords.'%');
         }
 
@@ -371,23 +372,25 @@ class Vehicle
 
         $sql = 'SELECT COUNT(`id_vehicle`) AS nb_vehicles FROM `vehicles` 
         JOIN `categories` ON `categories`.id_category = `vehicles`.id_category';
+       
 
         // if ($id_category != 0) {
         if ($id_category) {
-            $sql .= ' WHERE `categories`.`id_category` = :id_category;';
-            $sth = $pdo->prepare($sql);
-            $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
-        } else {
-            $sql .= '';
-            $sth = $pdo->query($sql);
-        }
+            $sql .= ' WHERE `categories`.`id_category`=:id_category';
+        } 
 
         if ($keywords) {
-            $sql .= ' WHERE `brand` LIKE :keywords OR `model` LIKE :keywords OR `name` LIKE :keywords OR `registration` LIKE :keywords';
-            $sth = $pdo->prepare($sql);
+            $sql .= ' AND (`brand` LIKE :keywords OR `model` LIKE :keywords OR `name` LIKE :keywords OR `registration` LIKE :keywords)';
+        } 
+
+        $sth = $pdo->prepare($sql);
+       
+        if($id_category) {
+            $sth->bindValue(':id_category', $id_category, PDO::PARAM_INT);
+        }
+        
+        if($keywords){
             $sth->bindValue(':keywords', '%'.$keywords.'%');
-        } else {
-            $sql .= '';
         }
 
         $sth->execute();
