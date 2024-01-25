@@ -13,7 +13,7 @@
             <h5 class="pb-3">Immatriculation: <?= $theVehicle->registration ?></h5>
             <h5 class="pb-3">Kilométrage: <?= $theVehicle->mileage ?></h5>
             <div class="pb-5">
-                <button class="btn btn-dark text-white" type="submit">Réserver</button>
+                <a href ="vehicles_form_ctrl.php?id_vehicle=<?=$theVehicle->id_vehicle?>" class="btn btn-dark text-white" type="submit">Réserver</a>
             </div>
         </div>
     </div>
