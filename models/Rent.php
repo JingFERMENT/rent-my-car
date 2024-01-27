@@ -174,4 +174,30 @@ class Rent
     {
         return $this->confirmed_at;
     }
+
+
+    public function insertRent(): bool
+    {
+
+        $pdo = Database::connect();
+
+        $sql = 'INSERT INTO `rents`(`id_rent`,`startdate`,`firstname`,`email`,`birthday`,`phone`,`city`,`zipcode`) 
+        VALUES (:id_client, :lastname,:firstname,:email,:birthday,:phone,:city,:zipcode);';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':id_client', $this->getId_client(), PDO::PARAM_INT);
+        $sth->bindValue(':lastname', $this->getLastname());
+        $sth->bindValue(':firstname', $this->getFirstname());
+        $sth->bindValue(':email', $this->getEmail());
+        $sth->bindValue(':birthday', $this->getBirthday());
+        $sth->bindValue(':phone', $this->getPhone());
+        $sth->bindValue(':city', $this->getCity());
+        $sth->bindValue(':zipcode', $this->getZipcode());
+
+        $sth->execute();
+        return $sth->rowCount() > 0;
+
+    }
+
 }

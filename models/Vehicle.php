@@ -269,7 +269,7 @@ class Vehicle
         // PDOStatement::rowCount — Retourne le nombre de lignes affectées par le dernier appel à la fonction PDOStatement::execute()
 
 
-        $sthResult = $sth->execute();
+        $sth->execute();
         // $nbRows = $sth->rowCount();
 
         //   if($nbRows>0) {

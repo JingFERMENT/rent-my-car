@@ -14,11 +14,34 @@ try {
 
     $title = 'Réservation';
 
+    // filtre input permet de ne pas mettre isset, car cela renvoit une valeur null
+    $id_vehicle = intval(filter_input(INPUT_GET, 'id_vehicle', FILTER_SANITIZE_NUMBER_INT));
+
+    $vehicle = Vehicle::get($id_vehicle);
+  
+
+
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
 
         // LASTNAME
         $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_SPECIAL_CHARS);
+        
+        // filtrer les données provenant d'un tableau
+        // $datas= filter_input_array(INPUT_POST, [
+        //     'lastname' => [
+        //         'filter'=> FILTER_VALIDATE_REGEXP,
+        //         'options'=> ['regexp' => '/' . REGEX_NAME . '/']
+        //     ],
+        // ]);
+
+        // foreach ($datas as $key => $data) {
+        //     if($data === false) {
+        //         $errors[$key] = ' Cette donnée n\'est pas valide.';
+        //     }
+          
+        // }
 
         if (empty($lastname)) { // pour les champs obligatoires
             $errors['lastname'] = 'Le nom est obligatoire.';
@@ -120,6 +143,10 @@ try {
                 $errors['enddate'] = 'La date de fin est invalide.';
             }
         }
+
+
+        // insérer deux fois les données 
+        
     }
 } catch (Throwable $e) {
     echo "Connection failed: " . $e->getMessage();

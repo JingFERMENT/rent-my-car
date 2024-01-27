@@ -22,3 +22,28 @@ offset = index
 
 Envoi des mails : 
 
+
+AJAX: comment faire executer les codes back sans rechargement 
+
+datas -> 
+1) controller filtre de validation 
+2) pas besoin de controller : nettoyer les données 
+
+regarder les corrections 
+
+filtre CALL BACK -> gestion API
+
+Jeu d'essai = Le parcours d'utilisateur 
+
+pdo: lastInsertId()
+
+issue de la model: 
+::self => utilisation 
+
+singleton : 
+transaction: quand une transaction est pas faite, supprimer le client
+
+PDO:beginTransaction 
+commit 
+rollback 
+

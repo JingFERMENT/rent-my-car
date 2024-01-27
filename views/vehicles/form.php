@@ -1,5 +1,5 @@
 <!----------------------FORM ---------------------->
-<h1 class="text-center" id="form-title">Formulaire de réservation</h1>
+<h1 class="text-center" id="form-title">Réservation de <?=$vehicle->brand?> <?=$vehicle->model?></h1>
 <div class="py-5">
     <form class="row" method="POST" novalidate>
         <!-- LASTNAME -->

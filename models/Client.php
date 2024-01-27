@@ -9,7 +9,7 @@ class Client
     private string $lastname;
     private string $firstname;
     private string $email;
-    private string $birthday;
+    private DateTime $birthday;
     private string $phone;
     private string $city;
     private string $zipcode;
@@ -26,8 +26,9 @@ class Client
         string $phone,
         string $city,
         string $zipcode,
-        string $created_at = null,
-        string $updated_at = null,
+        ?int $id_client,
+        ?string $created_at = null,
+        ?string $updated_at = null,
 
     ) {
         $this->lastname = $lastname;
@@ -37,6 +38,7 @@ class Client
         $this->phone = $phone;
         $this->city = $city;
         $this->zipcode = $zipcode;
+        $this->id_client = $id_client;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -132,7 +134,7 @@ class Client
     /**
      * Get the value of birthday
      */
-    public function getBirthday(): string
+    public function getBirthday(): DateTime
     {
         return $this->birthday;
     }
@@ -246,4 +248,27 @@ class Client
         return $this->updated_at;
     }
 
+
+    public function insertClient(): bool
+    {
+
+        $pdo = Database::connect();
+
+        $sql = 'INSERT INTO `clients`(`id_client`,`lastname`,`firstname`,`email`,`birthday`,`phone`,`city`,`zipcode`) 
+        VALUES (:id_client, :lastname,:firstname,:email,:birthday,:phone,:city,:zipcode);';
+
+        $sth = $pdo->prepare($sql);
+
+        $sth->bindValue(':lastname', $this->getLastname());
+        $sth->bindValue(':firstname', $this->getFirstname());
+        $sth->bindValue(':email', $this->getEmail());
+        $sth->bindValue(':birthday', $this->getBirthday()->format('Y-m-d H:i:s'));
+        $sth->bindValue(':phone', $this->getPhone());
+        $sth->bindValue(':city', $this->getCity());
+        $sth->bindValue(':zipcode', $this->getZipcode());
+
+        $sth->execute();
+        return $sth->rowCount() > 0;
+
+    }
 }
