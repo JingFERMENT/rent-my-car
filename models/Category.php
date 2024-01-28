@@ -139,7 +139,7 @@ class Category
      * 
      * @return object
      */
-    public static function get(?int $id_category): object|false
+    public static function get(int $id_category): object|false
     {
         // appel de la méthode static connect
         $pdo = Database::connect();

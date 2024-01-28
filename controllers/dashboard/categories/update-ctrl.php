@@ -1,7 +1,6 @@
 
 <?php
 // !!!! meme vu pour ajouter et modifier 
-require_once(__DIR__ . '/../../../config/init.php');
 require_once(__DIR__ . '/../../../models/Category.php');
 
 // mettre de manière globale
@@ -11,6 +10,7 @@ try {
     // attention c'est en GET 
     // Récupération du paramètre d'URL correspondant à l'id de la catégorie cliquée
     $id_category = intval(filter_input(INPUT_GET, 'id_category', FILTER_SANITIZE_NUMBER_INT));
+    
     $categorytoDisplay = Category::get($id_category);
     
     if (!$categorytoDisplay) {
@@ -62,12 +62,11 @@ try {
 
             // Récupération de la catégorie selon son id
             $categorytoDisplay = Category::get($id_category);
-
         }
     }
 } catch (Throwable $e) {
     // echo "Connection failed: " . $e->getMessage();
-    $error = $th->getMessage();
+    $error = $e->getMessage();
     include __DIR__ . '/../../../views/dashboard/templates/header_dashboard.php';
     include __DIR__ . '/../../../views/dashboard/templates/error.php';
     include __DIR__ . '/../../../views/dashboard/templates/footer_dashboard.php';

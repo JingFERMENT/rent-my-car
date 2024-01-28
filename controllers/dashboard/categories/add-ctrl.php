@@ -53,7 +53,7 @@ try {
     }
 } catch (Throwable $e) {
     //inclure une view pour trainter les messages d'erreur
-    $error = $th->getMessage();
+    $error = $e->getMessage();
     include __DIR__ . '/../../../views/dashboard/templates/header_dashboard.php';
     include __DIR__ . '/../../../views/dashboard/templates/error.php';
     include __DIR__ . '/../../../views/dashboard/templates/footer_dashboard.php';
@@ -66,5 +66,5 @@ include __DIR__ . '/../../../views/templates/header_dashboard.php';
 include __DIR__ . '/../../../views/dashboard/categories/add.php';
 include __DIR__ . '/../../../views/templates/footer_dashboard.php';
 
-// how to vider la table manuelle dans le SQL 
-// aller sur le rubrique "operations" -> vider la table (truncate) -> décocher la case
+// vider la table manuelle dans le SQL 
+// rubrique "operations" -> vider la table (truncate) -> décocher la case

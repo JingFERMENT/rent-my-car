@@ -1,9 +1,11 @@
 <?php
 session_start();
+
 require_once(__DIR__ . '/../../../models/Category.php');
 
 try {
     $title = 'Liste des catégories'; 
+    // Appel de la méthode statique getAll
     $categories = Category::getAll();
    
     // on récupère les messages stockés dans la session.
@@ -20,13 +22,11 @@ try {
     }
     
 } catch (Throwable $e) {
-    $error = $th->getMessage();
+    $error = $e->getMessage();
     include __DIR__ . '/../../../views/dashboard/templates/header.php';
     include __DIR__ . '/../../../views/dashboard/templates/error.php';
     include __DIR__ . '/../../../views/dashboard/templates/footer.php';
     die;
-    // echo "Connection failed: " . $e->getMessage();
-    // var_dump($e);
 }
 
 // views

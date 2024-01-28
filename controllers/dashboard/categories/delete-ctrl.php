@@ -36,7 +36,7 @@ try {
     die;
 } catch (Throwable $e) {
     // echo "Connection failed: " . $e->getMessage();
-    $error = $th->getMessage();
+    $error = $e->getMessage();
     include __DIR__ . '/../../../views/dashboard/templates/header.php';
     include __DIR__ . '/../../../views/dashboard/templates/error.php';
     include __DIR__ . '/../../../views/dashboard/templates/footer.php';

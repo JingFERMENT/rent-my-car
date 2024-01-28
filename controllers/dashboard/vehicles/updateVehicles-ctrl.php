@@ -6,10 +6,10 @@ require_once(__DIR__ . '/../../../models/Category.php');
 try {
 
     $title = "Modifier un véhicule";
-    // récupérer les véhicules
+
     $categories = Category::getAll(true);
   
-    // récupérer la voiture à modifier
+    // Récupération du paramètre d'URL correspondant à l'id de la catégorie cliquée
     $id_vehicle = intval(filter_input(INPUT_GET, 'id_vehicle', FILTER_SANITIZE_NUMBER_INT));
     $theVehicle = Vehicle::get($id_vehicle);
 
@@ -18,28 +18,29 @@ try {
         die;
     }
 
+    // Si les données du formulaire ont été transmises
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors = [];
 
-         // Catégorie
-         $id_category = intval(filter_input(INPUT_POST, 'id_category', FILTER_SANITIZE_NUMBER_INT));
+        // Récupération, nettoyage et validation des données
+        $id_category = intval(filter_input(INPUT_POST, 'id_category', FILTER_SANITIZE_NUMBER_INT));
+        $brand = filter_input(INPUT_POST, 'brand', FILTER_SANITIZE_SPECIAL_CHARS);
+        $model = filter_input(INPUT_POST, 'model', FILTER_SANITIZE_SPECIAL_CHARS);
+        $registration = filter_input(INPUT_POST, 'registration', FILTER_SANITIZE_SPECIAL_CHARS);
+        $mileage = intval(filter_input(INPUT_POST, 'mileage', FILTER_SANITIZE_NUMBER_INT));
+        $picture = $_FILES['picture'];
 
-         if (empty($id_category)) { // pour les champs obligatoires
+         // Catégorie
+         if (!$id_category) { // pour les champs obligatoires
              $errors['id_category'] = 'La catégorie est obligatoire.';
          } else { // validation des données
-             $ID = array_column($categories, 'id_category');
-             // comparer les deux tableaux avec les valeurs 
-             $isOk = in_array($id_category, $ID);
-             if (!$isOk) {
-                 $errors['id_category'] = 'La catégorie n\'existe pas.';
-             }
+            if(!Category::get($id_category)){
+                $error['id_category'] = 'Cette catégorie est inconnue!';
+            }
          }
 
-
         // Marque 
-        $brand = filter_input(INPUT_POST, 'brand', FILTER_SANITIZE_SPECIAL_CHARS);
-
-        if (empty($brand)) { // le champs est obligatoire
+        if (!$brand) { // le champs est obligatoire
             $errors['brand'] = 'La marque est obligatoire.';
         } else {
             // validation des données "marque"
@@ -50,10 +51,7 @@ try {
         }
 
         // Model 
-        $model = filter_input(INPUT_POST, 'model', FILTER_SANITIZE_SPECIAL_CHARS);
-
-
-        if (empty($model)) { // pour les champs obligatoires
+        if (!$model) { // pour les champs obligatoires
             $errors['model'] = 'La modèle est obligatoire.';
         } else {
             // validation des données
@@ -64,9 +62,7 @@ try {
         }
 
         // Immatriculation
-        $registration = filter_input(INPUT_POST, 'registration', FILTER_SANITIZE_SPECIAL_CHARS);
-
-        if (empty($registration)) { // pour les champs obligatoires
+        if (!$registration) { // pour les champs obligatoires
             $errors['registration'] = 'Le numéro d\'immatriculation est obligatoire.';
         } else {
             // validation des données
@@ -77,15 +73,12 @@ try {
         }
 
         // Kilométrage
-        $mileage = intval(filter_input(INPUT_POST, 'mileage', FILTER_SANITIZE_NUMBER_INT));
-
-        if (empty($mileage)) { // pour les champs obligatoires
+        if (!$mileage) { // pour les champs obligatoires
             $errors['mileage'] = 'Le nombre de kilomètre est obligatoire.';
         } else {
             // validation des données
-            // $isOk = filter_var($mileage, FILTER_VALIDATE_REGEXP, array("options" => array("regexp" => '/' . REGEX_MILEAGE . '/')));
             $isOk = filter_var($mileage, FILTER_VALIDATE_INT);
-            if (!$isOk) {
+            if (!($isOk >=0) ) {
                 $errors['mileage'] = 'Le nombre de kilomètre est invalide.';
             }
         }
@@ -93,36 +86,36 @@ try {
         $pictureToSave = $theVehicle->picture;
        
         // FILE: 
-        // if ($_FILES['picture']['error'] != 4) {
-        if (!empty($_FILES['picture']['name'])) {
+        // if ($picture['error'] != 4) {
+        if (!empty($picture['name'])) {
             try {
                 // @ signfie que si la suppression du fichier échoue pour une raison quelconque, comme si le fichier n'existe pas, le script continuera à s'exécuter sans générer de message d'erreur
                @unlink(__DIR__. '/../../../public/uploads/vehicles/' .$pictureToSave); // supprimer l'image si on change de l'image
                 
-                if ($_FILES['picture']['error'] != 0) {
+                if ($picture['error'] != 0) {
                     throw new Exception("Une erreur s'est produite.");
                 }
 
                 // quand le format n'est pas correct
-                if (!in_array($_FILES['picture']['type'], ARRAY_TYPES_MIMES)) {
+                if (!in_array($picture['type'], ARRAY_TYPES_MIMES)) {
                     throw new Exception("Le format de l'image n'est pas correct.");
                 }
 
-                if ($_FILES['picture']['size'] > UPLOAD_MAX_SIZE) {
+                if ($picture['size'] > UPLOAD_MAX_SIZE) {
                     throw new Exception("Le fichier est trop lourd");
                 }
 
                 // une chaine de caractère unique 
                 $filename = uniqid('img_');
-                $extension = pathinfo($_FILES['picture']['name'], PATHINFO_EXTENSION); // récupérer les extensions
+                $extension = pathinfo($picture['name'], PATHINFO_EXTENSION); // récupérer les extensions
                 // le fichier venait de dossier tmp_name
-                $from = $_FILES['picture']['tmp_name']; 
+                $from = $picture['tmp_name']; 
 
                 $toBack = __DIR__ . '/../../../public/uploads/vehicles/' . $filename . '.' . $extension;
                 $pictureToSave =  $filename . '.' . $extension; // enregistrer uniquement le nom du fichier
                 move_uploaded_file($from, $toBack);
             } catch (\Throwable $th) {
-                $errors['photo'] = $th->getMessage();
+                $errors['picture'] = $th->getMessage();
             }
         }
 
@@ -134,10 +127,10 @@ try {
         }
 
         if (empty($errors)) {
-            
 
             // mettre à jour les véhicules
             $updatedVehicle = new Vehicle();
+
             $updatedVehicle->setId_category($id_category);
             $updatedVehicle->setId_vehicle($id_vehicle);
             $updatedVehicle->setBrand($brand);
@@ -146,10 +139,13 @@ try {
             $updatedVehicle->setMileage($mileage);
             $updatedVehicle->setPicture($pictureToSave);
 
+            // Appel de la méthode update
             $updatedResult = $updatedVehicle->updateVehicles();
 
             if ($updatedResult) {
                 $msg = 'La modification a bien été prise en compte.';
+                // header('location: /controllers/dashboard/vehicles/listVehicles-ctrl.php');
+                // die;
             } else {
                 $msg = 'Erreur, le véhicule n\'a pas été modifié.';
             }
@@ -160,7 +156,11 @@ try {
    
 
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    $error = $e->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer.php';
+    die;
 }
 
 // views

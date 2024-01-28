@@ -8,24 +8,31 @@ try {
     // transformer un tableau avec les objets en un tableau avec les valeurs
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $errors = [];
-        // Catégorie
-        $id_category = intval(filter_input(INPUT_POST, 'id_category', FILTER_SANITIZE_NUMBER_INT));
 
+        $errors = [];
+        // Récupération, nettoyage et validation des données
+        $id_category = intval(filter_input(INPUT_POST, 'id_category', FILTER_SANITIZE_NUMBER_INT));
+        $brand = filter_input(INPUT_POST, 'brand', FILTER_SANITIZE_SPECIAL_CHARS);
+        $model = filter_input(INPUT_POST, 'model', FILTER_SANITIZE_SPECIAL_CHARS);
+        $registration = filter_input(INPUT_POST, 'registration', FILTER_SANITIZE_SPECIAL_CHARS);
+        $mileage = intval(filter_input(INPUT_POST, 'mileage', FILTER_SANITIZE_NUMBER_INT));
+        
+        // Catégorie
         if (empty($id_category)) { // pour les champs obligatoires
             $errors['id_category'] = 'La catégorie est obligatoire.';
         } else { // validation des données
-            $ID = array_column($categories, 'id_category');
-            // comparer les deux tableaux avec les valeurs 
-            $isOk = in_array($id_category, $ID);
-            if (!$isOk) {
-                $errors['id_category'] = 'La catégorie n\'existe pas.';
+            if (!Category::get($id_category)) {
+                $error['id_category'] = 'Cette catégorie est inconnue!';
             }
+            // $ID = array_column($categories, 'id_category');
+            // // comparer les deux tableaux avec les valeurs 
+            // $isOk = in_array($id_category, $ID);
+            // if (!$isOk) {
+            //     $errors['id_category'] = 'La catégorie n\'existe pas.';
+            // }
         }
 
         // Marque
-        $brand = filter_input(INPUT_POST, 'brand', FILTER_SANITIZE_SPECIAL_CHARS);
-
         if (empty($brand)) { // pour les champs obligatoires
             $errors['brand'] = 'La marque est obligatoire.';
         } else {
@@ -37,8 +44,6 @@ try {
         }
 
         // Modèle
-        $model = filter_input(INPUT_POST, 'model', FILTER_SANITIZE_SPECIAL_CHARS);
-
         if (empty($model)) { // pour les champs obligatoires
             $errors['model'] = 'La modèle est obligatoire.';
         } else {
@@ -50,8 +55,6 @@ try {
         }
 
         // Immatriculation
-        $registration = filter_input(INPUT_POST, 'registration', FILTER_SANITIZE_SPECIAL_CHARS);
-
         if (empty($registration)) { // pour les champs obligatoires
             $errors['registration'] = 'Le numéro d\'immatriculation est obligatoire.';
         } else {
@@ -63,8 +66,6 @@ try {
         }
 
         // Kilométrage
-        $mileage = intval(filter_input(INPUT_POST, 'mileage', FILTER_SANITIZE_NUMBER_INT));
-
         if (empty($mileage)) { // pour les champs obligatoires
             $errors['mileage'] = 'Le nombre de kilomètre est obligatoire.';
         }else {
@@ -76,8 +77,8 @@ try {
             }
         }
 
+        // Enregistrement du fichier localement sur le serveur
         $pictureToSave = null;
-        // FILE: 
         // if ($_FILES['photo']['error'] != 4) {}
         if (!empty($_FILES['photo']['name'])) {
             try {
@@ -110,10 +111,12 @@ try {
             }
         }
 
+        // Enregistrement en base de données
         if (empty($errors)) {
             // autre méthode : 
             // $vehicle = new Vehicle($brand, $model,$registration,$mileage,$filename,$id_category);
             
+            // Création d'un nouvel objet issu de la classe 'Vehicle'
             $vehicle = new Vehicle();
             $vehicle->setBrand($brand);
             $vehicle->setModel($model);
@@ -122,17 +125,25 @@ try {
             $vehicle->setPicture($pictureToSave);
             $vehicle->setId_category($id_category);
 
+            // Appel de la méthode insert
             $insertResult = $vehicle->insertVehicle();
 
             if ($insertResult) {
                 $msg = 'Le véhicule a bien été pris en compte.';
+                /// Si la méthode a retourné "true", on redirige vers la liste
+                header('location: /controllers/dashboard/vehicles/listVehicles-ctrl.php');
+                die;
             } else {
                 $msg = 'Erreur, le véhicule n\'a pas été ajouté.';
             }
         }
     }
 } catch (Throwable $e) {
-    echo "Connection failed: " . $e->getMessage();
+    $error = $e->getMessage();
+    include __DIR__ . '/../../../views/dashboard/templates/header.php';
+    include __DIR__ . '/../../../views/dashboard/templates/error.php';
+    include __DIR__ . '/../../../views/dashboard/templates/footer.php';
+    die;
 }
 
 // views 
